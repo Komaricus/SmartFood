@@ -1,0 +1,26 @@
+#main-container .card {
+  height: 400px;
+  background-size: cover;
+  box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.3) inset;
+  border: none;
+}
+
+#menu-card {
+  background-image: url(img/menu-card.jpg);
+}
+
+#products-card {
+  background-image: url(img/products.jpg);
+}
+
+#diets-card {
+  background-image: url(img/Diets.jpg);
+}
+
+footer {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}

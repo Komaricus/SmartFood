@@ -1,0 +1,23 @@
+{
+  "name": "smartfood",
+  "version": "1.0.0",
+  "description": "This is Smart Food Project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Komaricus/SmartFood.git"
+  },
+  "author": "Alex Komarov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Komaricus/SmartFood/issues"
+  },
+  "homepage": "https://github.com/Komaricus/SmartFood#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "nodemon": "^1.18.9"
+  }
+}
