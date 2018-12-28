@@ -1,2 +1,2 @@
 # SmartFood
-Project of the "Web Service Smart Food"
+Project of the Web Service "Smart Food"
