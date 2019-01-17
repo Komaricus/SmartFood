@@ -1,11 +1,10 @@
 {
-  "name": "smartfood",
+  "name": "smartfood-v1",
   "version": "1.0.0",
-  "description": "This is Smart Food Project",
-  "main": "app.js",
+  "description": "Smart Fridge Project",
+  "main": "index.js",
   "scripts": {
-    "start": "node server/index.js",
-    "dev": "nodemon server/index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -17,13 +16,24 @@
     "url": "https://github.com/Komaricus/SmartFood/issues"
   },
   "homepage": "https://github.com/Komaricus/SmartFood#readme",
+  "_moduleAliases": {
+    "@root": ".",
+    "@SmartFridge": "./services/SmartFridgeAPI",
+    "@SmartFridgeModels": "./services/SmartFridgeAPI/app/models",
+    "@SmartFridgeAPI": "./services/SmartFridgeAPI/config/app.js",
+    "@config": "./services/SmartFridgeAPI/config/index.js"
+  },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
+    "consign": "^0.1.6",
     "cors": "^2.8.5",
     "express": "^4.16.4",
-    "mongodb": "^3.1.10"
-  },
-  "devDependencies": {
-    "nodemon": "^1.18.9"
+    "jsonwebtoken": "^8.4.0",
+    "module-alias": "^2.1.0",
+    "mongoose": "^5.4.4",
+    "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0"
   }
 }
