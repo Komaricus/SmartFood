@@ -7,11 +7,11 @@ const Schema = mongoose.Schema({
     unique: true,
     required: true
   },
+
   password: {
     type: String,
     required: true
-  },
-  clients: [{}]
+  }
 });
 
 Schema.pre('save', function (next) {
