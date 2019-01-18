@@ -3,7 +3,6 @@ module.exports = (mongoose, config) => {
   mongoose.Promise = Promise;
   mongoose.connect(config.database, {
     useNewUrlParser: true,
-    useMongoClient: true,
     promiseLibrary: global.Promise
   });
   database.on('error', error => console.log(`Connection to SmartFridge database failed: ${error}`));

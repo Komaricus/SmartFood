@@ -1,56 +1,19 @@
 <template>
   <div>
     <app-header></app-header>
+    <v-carousel hide-delimiters class="mt-5">
+      <v-carousel-item v-for="(item,i) in items" :key="i">
+        <div :id="item.id" class="carousel-item-card">
+          <h1 class="white--text pl-5 pt-5">{{item.title}}</h1>
 
-    <!-- JUMBOTRON -->
-    <div class="jumbotron text-center mb-3">
-      <h1>Добро пожаловать!</h1>
-      <p
-        class="lead"
-      >Веб-сервис &laquo;Умное питание&raquo; помогает с учетом продуктов и приготовлением блюд.</p>
-      <hr>
-      <p>Вы можете ознакомиться со всеми возможностями сайта в разделе &laquo;О сайте&raquo;</p>
-      <router-link class="btn btn-warning" to="/about" role="button">Перейти</router-link>
-    </div>
-
-    <!-- MAIN CONTAINER -->
-    <div id="main-container" class="container">
-      <div id="menu-card" class="card mb-3">
-        <div class="card-body d-flex flex-column">
-          <h1 class="card-title m-2 text-warning">Меню</h1>
-          <h5 class="card-subtitle m-2 text-white">Рецепты и генерация меню</h5>
-          <router-link
-            class="mt-auto ml-auto btn btn-block btn-outline-warning"
-            to="/menu"
-            style="max-width: 120px;"
-          >Подробнее</router-link>
+          <v-btn color="orange" class="mt-auto ml-auto mr-5 mb-5" :to="item.link">Подробнее</v-btn>
         </div>
-      </div>
+      </v-carousel-item>
+    </v-carousel>
 
-      <div id="products-card" class="card mb-3">
-        <div class="card-body d-flex flex-column">
-          <h1 class="card-title m-2 text-warning">Продукты</h1>
-          <h5 class="card-subtitle m-2 text-white">Информация о продуктах</h5>
-          <router-link
-            class="mt-auto ml-auto btn btn-block btn-outline-warning"
-            to="/products"
-            style="max-width: 120px;"
-          >Подробнее</router-link>
-        </div>
-      </div>
+    <v-snackbar bottom="bottom" :color="snackColor" v-model="snackbar">{{ message }}</v-snackbar>
 
-      <div id="diets-card" class="card mb-3">
-        <div class="card-body d-flex flex-column">
-          <h1 class="card-title m-2 text-warning">Диеты</h1>
-          <h5 class="card-subtitle m-2 text-white">Выбор и ведение диеты</h5>
-          <router-link
-            class="mt-auto ml-auto btn btn-block btn-outline-warning"
-            to="/diets"
-            style="max-width: 120px;"
-          >Подробнее</router-link>
-        </div>
-      </div>
-    </div>
+    <!-- <app-footer></app-footer> -->
   </div>
 </template>
 
@@ -58,17 +21,46 @@
 
 <script>
 export default {
-  name: "MainComponent"
+  name: "MainComponent",
+  data() {
+    return {
+      snackbar: false,
+      message: "",
+      snackColor: "red lighten-1",
+      items: [
+        {
+          title: "Меню",
+          id: "menu-card",
+          link: "/menu"
+        },
+        {
+          title: "Продукты",
+          id: "products-card",
+          link: "/products-menu"
+        },
+        {
+          title: "Диеты",
+          id: "diets-card",
+          link: "/diets"
+        },
+        {
+          title: "Рецепты",
+          id: "recipes-card",
+          link: "/recipes"
+        }
+      ]
+    };
+  }
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#main-container .card {
-  height: 400px;
+.carousel-item-card {
+  display: flex;
+  height: 100%;
+  width: 100%;
   background-size: cover;
   box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.3) inset;
-  border: none;
 }
 
 #menu-card {
@@ -83,11 +75,11 @@ export default {
   background-image: url("../../assets/images/Diets.jpg");
 }
 
-footer {
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+#recipes-card {
+  background-image: url("../../assets/images/Recipes.jpg");
+}
+
+a {
+  text-decoration: none;
 }
 </style>

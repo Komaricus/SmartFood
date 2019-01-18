@@ -1,52 +1,51 @@
 <template>
-  <div class="l-auth-container">
-    <div class="l-auth elevation-5">
-      <v-form v-model="validLogin">
-        <h3 class="text-xs-center">Авторизация</h3>
+  <div>
+    <div class="l-signup elevation-5">
+      <v-form v-model="validSignUp">
+        <h3 class="text-xs-center">Регистрация</h3>
         <v-text-field
-          label="Пользователь"
-          v-model="credentials.username"
+          label="Имя пользователя"
+          v-model="newUser.username"
           prepend-icon="account_box"
           :rules="rules"
           required
           color="green lighten-1"
-          @keyup.enter="submitAuthentication()"
+          @keyup.enter="submitSignUp()"
         ></v-text-field>
 
         <v-text-field
           label="Пароль"
-          v-model="credentials.password"
+          v-model="newUser.password"
           prepend-icon="lock"
           :rules="rules"
-          :append-icon="loginPasswordVisible ? 'visibility' : 'visibility_off'"
-          :append-icon-cb="() => (loginPasswordVisible = !loginPasswordVisible)"
-          :type="loginPasswordVisible ? 'text' : 'password'"
+          :append-icon="signUpPasswordVisible ? 'visibility' : 'visibility_off'"
+          :append-icon-cb="() => (signUpPasswordVisible = !signUpPasswordVisible)"
+          :type="signUpPasswordVisible ? 'text' : 'password'"
           color="green lighten-1"
           required
-          @keyup.enter="submitAuthentication()"
+          @keyup.enter="submitSignUp()"
         ></v-text-field>
 
-        <router-link to="/registration">
-          <v-btn block flat color="green lighten-1">Создать аккаунт</v-btn>
+        <router-link to="/login">
+          <v-btn block flat color="green lighten-1">Войти</v-btn>
         </router-link>
-        <v-btn block color="green lighten-1" @click.native="submitAuthentication()">Войти</v-btn>
+        <v-btn block color="green lighten-1" @click.native="submitSignUp()">Зарегистрироваться</v-btn>
       </v-form>
     </div>
 
     <v-snackbar bottom="bottom" color="red lighten-1" v-model="snackbar">{{ message }}</v-snackbar>
   </div>
 </template>
-
 <script>
-import Authentication from "@/components/pages/Authentication";
+import Registration from "@/components/pages/Registration";
 export default {
   data() {
     return {
       snackbar: false,
-      validLogin: false,
-      loginPasswordVisible: false,
+      validSignUp: false,
+      signUpPasswordVisible: false,
       rules: [value => !!value || "Обязательное поле"],
-      credentials: {
+      newUser: {
         username: "",
         password: ""
       },
@@ -54,8 +53,8 @@ export default {
     };
   },
   methods: {
-    submitAuthentication() {
-      Authentication.authenticate(this, this.credentials, "/");
+    submitSignUp() {
+      Registration.signup(this, this.newUser, "/");
     }
   }
 };
@@ -64,7 +63,7 @@ export default {
 <style lang="scss">
 @import "./../../../assets/styles";
 
-.l-auth {
+.l-signup {
   background-color: $background-color;
   padding: 15px;
   margin: 45px auto;

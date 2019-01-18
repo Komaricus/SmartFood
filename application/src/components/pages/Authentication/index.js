@@ -1,7 +1,7 @@
 import Axios from 'axios'
 import router from '@/router'
 
-const SmartFridgeAPI = 'https://focus-budget-manager-api.herokuapp.com'
+const SmartFridgeAPI = 'https://smart-food-app.herokuapp.com'
 
 export default {
   user: {
@@ -18,7 +18,6 @@ export default {
         context.validLogin = true
 
         this.user.authenticated = true
-
         if (redirect) router.push(redirect)
       }).catch(({
         response: {
@@ -30,28 +29,12 @@ export default {
       })
   },
 
-  signup(context, credentials, redirect) {
-    Axios.post(`${SmartFridgeAPI}/api/v1/signup`, credentials)
-      .then(() => {
-        context.validSignUp = true
-
-        this.authenticate(context, credentials, redirect)
-      }).catch(({
-        response: {
-          data
-        }
-      }) => {
-        context.snackbar = true
-        context.message = data.message
-      })
-  },
-
-  signout(context, redirect) {
+  signout(context) {
     context.$cookie.delete('token')
     context.$cookie.delete('user_id')
     this.user.authenticated = false
 
-    if (redirect) router.push(redirect)
+    router.go(0)
   },
 
   checkAuthentication() {

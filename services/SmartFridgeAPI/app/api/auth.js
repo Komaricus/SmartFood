@@ -8,14 +8,14 @@ api.login = (User) => (req, res) => {
   User.findOne({ username: req.body.username }, (error, user) => {
     if (error) throw error;
 
-    if (!user) res.status(401).send({ success: false, message: 'Authentication failed. User not found.' });
+    if (!user) res.status(401).send({ success: false, message: 'Пользователь не найден' });
     else {
       user.comparePassword(req.body.password, (error, matches) => {
         if (matches && !error) {
           const token = jwt.sign({ user }, config.secret);
-          res.json({ success: true, message: 'Token granted', token });
+          res.json({ success: true, message: 'Token granted', token, user: user });
         } else {
-          res.status(401).send({ success: false, message: 'Authentication failed. Wrong password.' });
+          res.status(401).send({ success: false, message: 'Неверный пароль' });
         }
       });
     }
