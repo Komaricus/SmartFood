@@ -8,4 +8,5 @@ module.exports = (app) => {
   app.route('/products-menu/fruits-list').post(api.createProduct(models.Product));
   app.route('/products-menu/fruits-list/:id').delete(api.deleteProduct(models.Product));
   app.route('/products-menu/fruits-list/:id').get(api.findProduct(models.Product));
+  app.route('/products/:name').get(api.findProductByName(models.Product));
 }

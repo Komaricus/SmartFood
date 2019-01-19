@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema({
+  title: {
+    type: String,
+    unique: true,
+    required: true
+  },
+
   name: {
     type: String,
     unique: true,
@@ -43,13 +49,11 @@ const Schema = mongoose.Schema({
   },
 
   img: {
-    type: String,
-    required: true
+    type: String
   },
 
   descr: {
-    type: String,
-    required: true
+    type: String
   },
 
   type: {

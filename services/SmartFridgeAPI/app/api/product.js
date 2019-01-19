@@ -5,7 +5,10 @@ const api = {};
 
 // //Add Product
 api.createProduct = (Product) => (req, res) => {
-  if (!req.body.name || !req.body.exDate || !req.body.cals || !req.body.prots || !req.body.fats || !req.body.carbs || !req.body.fibers || !req.body.water || !req.body.type || !req.body.quant) res.json({ success: false, message: 'Заполните обязательные поля' });
+  if (!req.body.name || !req.body.exDate || !req.body.cals || !req.body.prots || !req.body.fats || !req.body.carbs || !req.body.fibers || !req.body.water || !req.body.type || !req.body.quant) res.json({
+    success: false,
+    message: 'Заполните обязательные поля'
+  });
   else {
     const product = new Product({
       name: req.body.name,
@@ -23,16 +26,24 @@ api.createProduct = (Product) => (req, res) => {
     });
 
     product.save(error => {
-      if (error) return res.status(400).json({ success: false, message: 'Название уже используется' });
-      res.json({ success: true, message: 'Продукт создан' });
+      if (error) return res.status(400).json({
+        success: false,
+        message: 'Название уже используется'
+      });
+      res.json({
+        success: true,
+        message: 'Продукт создан'
+      });
     });
   }
 }
 
-//Delete Product
+// Delete Product
 api.deleteProduct = (Product) => (req, res) => {
 
-  Product.findByIdAndDelete({ _id: req.params.id, }, (error) => {
+  Product.findByIdAndDelete({
+    _id: req.params.id,
+  }, (error) => {
     if (error) throw error;
     res.status(200).send();
   });
@@ -41,7 +52,19 @@ api.deleteProduct = (Product) => (req, res) => {
 // Find One Product
 api.findProduct = (Product) => (req, res) => {
 
-  Product.find({ _id: req.params.id }, (error, product) => {
+  Product.find({
+    _id: req.params.id
+  }, (error, product) => {
+    if (error) throw error;
+    res.status(200).json(product);
+  });
+
+}
+api.findProductByName = (Product) => (req, res) => {
+
+  Product.find({
+    name: req.params.name
+  }, (error, product) => {
     if (error) throw error;
     res.status(200).json(product);
   });
