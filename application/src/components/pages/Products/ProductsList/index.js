@@ -4,10 +4,10 @@ const SmartFridgeAPI = 'https://smart-food-app.herokuapp.com'
 
 export default class ProductsList {
 
-  static getProducts() {
+  static getProducts(category) {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await Axios.get(`${SmartFridgeAPI}/products-menu/fruits-list`);
+        const res = await Axios.get(`${SmartFridgeAPI}/${category}`);
         const data = res.data;
         resolve(
           data.map(product => ({
@@ -20,18 +20,17 @@ export default class ProductsList {
     });
   }
 
-  getProduct(name) {
-    Axios.get(`${SmartFridgeAPI}/products/${name}`).then(({
-      data
-    }) => {
-      context.product = data
-    }).catch(({
-      response: {
-        data
-      }
-    }) => {
-      context.snackbar = true
-      context.message = data.message
-    })
+  static getTitle(type) {
+    switch (type) {
+      case 'fruits':
+        return 'Фрукты'
+        break;
+      case 'vegetable':
+        return 'Овощи'
+        break;
+      default:
+        return 'Ошибка'
+        break;
+    }
   }
 }

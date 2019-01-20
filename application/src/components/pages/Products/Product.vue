@@ -1,12 +1,14 @@
 <template>
   <v-container>
     <app-header></app-header>
-    <h1>Product Page</h1>
-    {{ product.name }}
+    <h1>{{ product.title }}</h1>
+    {{ product.descr }}
   </v-container>
 </template>
 <script>
-import ProductsList from "@/components/pages/Products/ProductsList";
+import Axios from "axios";
+
+const SmartFridgeAPI = "https://smart-food-app.herokuapp.com";
 
 export default {
   data() {
@@ -15,12 +17,14 @@ export default {
     };
   },
   async created() {
-    try {
-      this.product = await ProductsList.getProduct();
-    } catch (err) {
-      this.snackbar = true;
-      this.message = err.message;
-    }
+    let vm = this;
+    await Axios.get(`${SmartFridgeAPI}/products/${vm.$route.params.id}`)
+      .then(function(response) {
+        vm.product = response.data[0];
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   }
 };
 </script>

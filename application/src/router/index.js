@@ -47,12 +47,12 @@ const router = new Router({
       component: ProductsMenu
     },
     {
-      path: '/products-menu/*-list',
+      path: '/products-menu/:category',
       name: 'Products List',
       component: ProductsList
     },
     {
-      path: '/products-menu/*-list/:name',
+      path: '/products-menu/:category/:id',
       name: 'Product',
       component: Product
     }

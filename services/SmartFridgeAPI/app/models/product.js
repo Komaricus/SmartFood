@@ -3,13 +3,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema({
   title: {
     type: String,
-    unique: true,
-    required: true
-  },
-
-  name: {
-    type: String,
-    unique: true,
     required: true
   },
 

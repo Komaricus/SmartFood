@@ -74,7 +74,9 @@ api.findProductByName = (Product) => (req, res) => {
 // Load Products
 api.loadProducts = (Product) => (req, res) => {
 
-  Product.find({}, (error, products) => {
+  Product.find({
+    type: req.params.category
+  }, (error, products) => {
     if (error) throw error;
     res.status(200).json(products);
   });
