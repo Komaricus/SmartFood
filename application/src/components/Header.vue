@@ -2,7 +2,7 @@
   <v-container>
     <v-toolbar app dark color="green" class="hidden-sm-and-down">
       <v-toolbar-title>
-        <router-link to="/">SmartFridge</router-link>
+        <router-link to="/">SmartFood</router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
@@ -34,14 +34,14 @@
           color="blue lighten-1 white--text"
           v-if=" !authenticated"
           to="/registration"
-          class="nav-button m-2"
+          class="nav-button ml-2"
         >Регистрация</v-btn>
       </v-toolbar-items>
     </v-toolbar>
 
     <v-toolbar app dark color="green" class="hidden-md-and-up">
       <v-toolbar-title>
-        <router-link to="/">SmartFridge</router-link>
+        <router-link to="/">SmartFood</router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
@@ -50,7 +50,7 @@
         <v-card>
           <v-toolbar flat color="green">
             <v-toolbar-title>
-              <router-link to="/" @click.native="dialog = false">SmartFridge</router-link>
+              <router-link to="/" @click.native="dialog = false">SmartFood</router-link>
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn icon @click.native="dialog = false">
@@ -91,7 +91,7 @@
                 color="blue lighten-1 white--text"
                 v-if=" !authenticated"
                 to="/registration"
-                class="nav-button m-2"
+                class="nav-button ml-2"
               >Регистрация</v-btn>
             </v-layout>
           </v-list>

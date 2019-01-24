@@ -1,6 +1,7 @@
 <template>
   <div>
     <app-header></app-header>
+    <h1 class="ma-5 text-xs-center">Умное питание - здоровая жизнь!</h1>
     <v-carousel hide-delimiters class="mt-5">
       <v-carousel-item v-for="(item,i) in items" :key="i">
         <div :id="item.id" class="carousel-item-card">
@@ -13,7 +14,7 @@
 
     <v-snackbar bottom="bottom" :color="snackColor" v-model="snackbar">{{ message }}</v-snackbar>
 
-    <!-- <app-footer></app-footer> -->
+    <app-footer></app-footer>
   </div>
 </template>
 
@@ -81,5 +82,9 @@ export default {
 
 a {
   text-decoration: none;
+}
+
+footer {
+  margin-top: 200px !important;
 }
 </style>

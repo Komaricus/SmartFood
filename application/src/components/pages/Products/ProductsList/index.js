@@ -25,8 +25,26 @@ export default class ProductsList {
       case 'fruits':
         return 'Фрукты'
         break;
-      case 'vegetable':
+      case 'vegetables':
         return 'Овощи'
+        break;
+      case 'meat':
+        return 'Мясо'
+        break;
+      case 'seafood':
+        return 'Морепродукты'
+        break;
+      case 'dairy':
+        return 'Молочные продукты'
+        break;
+      case 'cereals':
+        return 'Крупы и мучные изделия'
+        break;
+      case 'poultry':
+        return 'Птица'
+        break;
+      case 'condiment':
+        return 'Специи и соусы'
         break;
       default:
         return 'Ошибка'

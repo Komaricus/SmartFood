@@ -1,18 +1,51 @@
 <template>
-  <v-container>
-    <app-header></app-header>
-    <h1 class="page-title">Категории продуктов</h1>
-    <router-link to="fruits" append>
-      <div id="fruits" class="category">
-        <h3 class="category-title">Фрукты</h3>
-      </div>
-    </router-link>
-    <router-link to="vegetable" append>
-      <div id="vegetables" class="category">
-        <h3 class="category-title">Овощи</h3>
-      </div>
-    </router-link>
-  </v-container>
+  <div>
+    <v-container>
+      <app-header></app-header>
+      <h1 class="page-title">Категории продуктов</h1>
+      <router-link to="fruits" append>
+        <div id="fruits" class="category">
+          <h3 class="category-title">Фрукты</h3>
+        </div>
+      </router-link>
+      <router-link to="vegetables" append>
+        <div id="vegetables" class="category">
+          <h3 class="category-title">Овощи</h3>
+        </div>
+      </router-link>
+      <router-link to="meat" append>
+        <div id="meat" class="category">
+          <h3 class="category-title">Мясо</h3>
+        </div>
+      </router-link>
+      <router-link to="seafood" append>
+        <div id="seafood" class="category">
+          <h3 class="category-title">Морепродукты</h3>
+        </div>
+      </router-link>
+      <router-link to="dairy" append>
+        <div id="dairy" class="category">
+          <h3 class="category-title">Молочные продукты</h3>
+        </div>
+      </router-link>
+      <router-link to="cereals" append>
+        <div id="cereals" class="category">
+          <h3 class="category-title">Крупы и мучные изделия</h3>
+        </div>
+      </router-link>
+      <router-link to="poultry" append>
+        <div id="poultry" class="category">
+          <h3 class="category-title">Птица</h3>
+        </div>
+      </router-link>
+      <router-link to="condiment" append>
+        <div id="condiment" class="category">
+          <h3 class="category-title">Специи и соусы</h3>
+        </div>
+      </router-link>
+    </v-container>
+    <app-footer></app-footer>
+  </div>
 </template>
 <script>
 export default {};
@@ -42,6 +75,30 @@ export default {};
 
 #vegetables {
   background-image: url("./../../../assets/images/vegetables.jpg");
+}
+
+#meat {
+  background-image: url("./../../../assets/images/meat.jpg");
+}
+
+#seafood {
+  background-image: url("./../../../assets/images/seafood.jpg");
+}
+
+#dairy {
+  background-image: url("./../../../assets/images/dairy.jpg");
+}
+
+#cereals {
+  background-image: url("./../../../assets/images/cereals.jpg");
+}
+
+#poultry {
+  background-image: url("./../../../assets/images/poultry.jpg");
+}
+
+#condiment {
+  background-image: url("./../../../assets/images/condiment.jpg");
 }
 
 a:hover {

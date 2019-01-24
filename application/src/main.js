@@ -4,7 +4,9 @@ import router from './router'
 import VueCookie from 'vue-cookie'
 import Vuetify from 'vuetify'
 import('../node_modules/vuetify/dist/vuetify.min.css')
+import Vuelidate from 'vuelidate'
 
+Vue.use(Vuelidate)
 Vue.use(VueCookie)
 Vue.use(Vuetify)
 

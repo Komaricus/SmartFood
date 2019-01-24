@@ -6,9 +6,13 @@ import * as Auth from '@/components/pages/Authentication'
 import MainComponent from '@/components/pages/MainComponent'
 import Authentication from '@/components/pages/Authentication/Authentication'
 import Registration from '@/components/pages/Registration/Registration'
+
 import ProductsMenu from '@/components/pages/Products/ProductsMenu'
 import ProductsList from '@/components/pages/Products/ProductsList/ProductsList'
 import Product from '@/components/pages/Products/Product'
+
+import RecipesMenu from '@/components/pages/Recipes/RecipesMenu'
+import RecipesList from '@/components/pages/Recipes/RecipesList/RecipesList'
 
 // Global components
 import Header from '@/components/Header'
@@ -55,6 +59,16 @@ const router = new Router({
       path: '/products-menu/:category/:id',
       name: 'Product',
       component: Product
+    },
+    {
+      path: '/recipes',
+      name: 'Recipes Menu',
+      component: RecipesMenu
+    },
+    {
+      path: '/recipes/:category',
+      name: 'Recipes List',
+      component: RecipesList
     }
   ]
 })

@@ -8,7 +8,7 @@
       </v-card-title>
       <v-data-table
         :headers="headers"
-        :items="products"
+        :items="recipes"
         :search="search"
         class="elevation-2"
         :rows-per-page-items="[10,25,{'text':'Все','value':-1}]"
@@ -17,10 +17,6 @@
         <template slot="items" slot-scope="props">
           <tr @click="redirect(props.item._id)">
             <td>{{ props.item.title }}</td>
-            <td class="text-xs-center">{{ props.item.cals }}</td>
-            <td class="text-xs-center">{{ props.item.prots }}</td>
-            <td class="text-xs-center">{{ props.item.fats }}</td>
-            <td class="text-xs-center">{{ props.item.carbs }}</td>
           </tr>
         </template>
         <v-alert
@@ -45,39 +41,35 @@
 </template>
 
 <script>
-import ProductsList from "@/components/pages/Products/ProductsList";
+import RecipesList from "@/components/pages/Recipes/RecipesList";
 import router from "@/router";
 
 export default {
   data() {
     return {
       title: "",
-      products: [],
+      recipes: [],
       snackbar: false,
       message: "",
       snackColor: "red lighten-1",
       search: "",
       headers: [
         {
-          text: "Продукт (100г)",
+          text: "Рецепт",
           align: "left",
           value: "title"
-        },
-        { text: "Калории (кКал)", value: "cals" },
-        { text: "Жиры (г)", value: "fats" },
-        { text: "Белки (г)", value: "prots" },
-        { text: "Углеводы (г)", value: "carbs" }
+        }
       ]
     };
   },
   async created() {
-    this.title = ProductsList.getTitle(this.$route.params.category);
+    this.title = RecipesList.getTitle(this.$route.params.category);
     if (!localStorage.getItem(this.$route.params.category)) {
       try {
-        this.products = await ProductsList.getProducts(
+        this.recipes = await RecipesList.getRecipes(
           this.$route.params.category
         );
-        const parsed = JSON.stringify(this.products);
+        const parsed = JSON.stringify(this.recipes);
         localStorage.setItem(this.$route.params.category, parsed);
       } catch (err) {
         this.snackbar = true;
@@ -88,7 +80,7 @@ export default {
   mounted() {
     if (localStorage.getItem(this.$route.params.category)) {
       try {
-        this.products = JSON.parse(
+        this.recipes = JSON.parse(
           localStorage.getItem(this.$route.params.category)
         );
       } catch (e) {
