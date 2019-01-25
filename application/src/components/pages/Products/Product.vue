@@ -49,7 +49,7 @@
 <script>
 import Axios from "axios";
 
-const SmartFridgeAPI = "http://localhost:3001";
+const SmartFridgeAPI = "https://smart-food-app.herokuapp.com";
 
 export default {
   data() {
@@ -60,15 +60,17 @@ export default {
   },
   async created() {
     let vm = this;
-    await Axios.get(`${SmartFridgeAPI}/product/${vm.$route.params.id}`)
-      .then(function(response) {
-        vm.product = response.data[0];
-        const parsed = JSON.stringify(vm.product);
-        localStorage.setItem(vm.$route.params.id, parsed);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+    if (!localStorage.getItem(this.$route.params.id)) {
+      await Axios.get(`${SmartFridgeAPI}/product/${vm.$route.params.id}`)
+        .then(function(response) {
+          vm.product = response.data[0];
+          const parsed = JSON.stringify(vm.product);
+          localStorage.setItem(vm.$route.params.id, parsed);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    }
   },
   mounted() {
     if (localStorage.getItem(this.$route.params.id)) {
