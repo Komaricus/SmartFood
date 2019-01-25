@@ -7,7 +7,7 @@ export default class ProductsList {
   static getProducts(category) {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await Axios.get(`${SmartFridgeAPI}/${category}`);
+        const res = await Axios.get(`${SmartFridgeAPI}/products/${category}`);
         const data = res.data;
         resolve(
           data.map(product => ({

@@ -5,13 +5,13 @@ const api = {};
 
 // //Add Product
 api.createProduct = (Product) => (req, res) => {
-  if (!req.body.name || !req.body.exDate || !req.body.cals || !req.body.prots || !req.body.fats || !req.body.carbs || !req.body.fibers || !req.body.water || !req.body.type || !req.body.quant) res.json({
+  if (!req.body.title || !req.body.exDate || !req.body.cals || !req.body.prots || !req.body.fats || !req.body.carbs || !req.body.fibers || !req.body.water || !req.body.type || !req.body.quant) res.json({
     success: false,
     message: 'Заполните обязательные поля'
   });
   else {
     const product = new Product({
-      name: req.body.name,
+      title: req.body.title,
       exDate: req.body.exDate,
       cals: req.body.cals,
       prots: req.body.prots,
@@ -63,7 +63,7 @@ api.findProduct = (Product) => (req, res) => {
 api.findProductByName = (Product) => (req, res) => {
 
   Product.find({
-    name: req.params.name
+    title: req.params.title
   }, (error, product) => {
     if (error) throw error;
     res.status(200).json(product);

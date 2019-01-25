@@ -13,6 +13,7 @@ import Product from '@/components/pages/Products/Product'
 
 import RecipesMenu from '@/components/pages/Recipes/RecipesMenu'
 import RecipesList from '@/components/pages/Recipes/RecipesList/RecipesList'
+import Recipe from '@/components/pages/Recipes/Recipe'
 
 // Global components
 import Header from '@/components/Header'
@@ -69,6 +70,11 @@ const router = new Router({
       path: '/recipes/:category',
       name: 'Recipes List',
       component: RecipesList
+    },
+    {
+      path: '/recipes/:category/:id',
+      name: 'Recipe',
+      component: Recipe
     }
   ]
 })

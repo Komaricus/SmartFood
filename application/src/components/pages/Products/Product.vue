@@ -49,7 +49,7 @@
 <script>
 import Axios from "axios";
 
-const SmartFridgeAPI = "https://smart-food-app.herokuapp.com";
+const SmartFridgeAPI = "http://localhost:3001";
 
 export default {
   data() {
@@ -60,7 +60,7 @@ export default {
   },
   async created() {
     let vm = this;
-    await Axios.get(`${SmartFridgeAPI}/products/${vm.$route.params.id}`)
+    await Axios.get(`${SmartFridgeAPI}/product/${vm.$route.params.id}`)
       .then(function(response) {
         vm.product = response.data[0];
         const parsed = JSON.stringify(vm.product);
