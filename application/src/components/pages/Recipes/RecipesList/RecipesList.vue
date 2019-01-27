@@ -4,7 +4,14 @@
       <app-header></app-header>
       <h1 class="page-title">{{title}}</h1>
       <v-card-title>
-        <v-text-field v-model="search" append-icon="search" label="Поиск" single-line hide-details></v-text-field>
+        <v-text-field
+          color="green lighten-1"
+          v-model="search"
+          append-icon="search"
+          label="Поиск"
+          single-line
+          hide-details
+        ></v-text-field>
       </v-card-title>
       <v-data-table
         :headers="headers"

@@ -56,10 +56,10 @@
                   <strong>Итого</strong>
                 </td>
                 <td class="text-xs-right">{{ total.weight }}</td>
-                <td class="text-xs-center">{{ total.cals }}</td>
-                <td class="text-xs-center">{{ total.prots }}</td>
-                <td class="text-xs-center">{{ total.fats }}</td>
-                <td class="text-xs-center">{{ total.carbs }}</td>
+                <td class="text-xs-center">{{ Math.ceil(total.cals)/100 }}</td>
+                <td class="text-xs-center">{{ Math.ceil(total.prots)/100 }}</td>
+                <td class="text-xs-center">{{ Math.ceil(total.fats)/100 }}</td>
+                <td class="text-xs-center">{{ Math.ceil(total.carbs)/100 }}</td>
               </tr>
               <tr>
                 <td>
@@ -193,42 +193,34 @@ export default {
             vm.$set(item, "product", response.data[0]);
             const parsed = JSON.stringify(vm.recipe);
             localStorage.setItem(vm.$route.params.id, parsed);
-            vm.countTotal();
-            vm.loading = false;
+            vm.countTotal(item);
           })
           .catch(function(error) {
             console.log(error);
           });
       });
+
+      vm.loading = false;
     }
   },
   methods: {
-    countTotal() {
+    countTotal(item) {
       let vm = this;
-      this.recipe.ingredients.forEach((item, index, array) => {
-        vm.total.weight += parseFloat(item.weight);
-        vm.total.cals +=
-          Math.ceil(
-            ((parseFloat(item.product.cals) * item.weight) / 100) * 100
-          ) / 100;
-        vm.total.prots +=
-          Math.ceil(
-            ((parseFloat(item.product.prots) * item.weight) / 100) * 100
-          ) / 100;
-        vm.total.fats +=
-          Math.ceil(
-            ((parseFloat(item.product.fats) * item.weight) / 100) * 100
-          ) / 100;
-        vm.total.carbs +=
-          Math.ceil(
-            ((parseFloat(item.product.carbs) * item.weight) / 100) * 100
-          ) / 100;
-      });
-
-      vm.total.cals = Math.ceil(vm.total.cals * 100) / 100;
-      vm.total.prots = Math.ceil(vm.total.prots * 100) / 100;
-      vm.total.fats = Math.ceil(vm.total.fats * 100) / 100;
-      vm.total.carbs = Math.ceil(vm.total.carbs * 100) / 100;
+      vm.total.weight += parseFloat(item.weight);
+      vm.total.cals +=
+        Math.ceil(((parseFloat(item.product.cals) * item.weight) / 100) * 100) /
+        100;
+      vm.total.prots +=
+        Math.ceil(
+          ((parseFloat(item.product.prots) * item.weight) / 100) * 100
+        ) / 100;
+      vm.total.fats +=
+        Math.ceil(((parseFloat(item.product.fats) * item.weight) / 100) * 100) /
+        100;
+      vm.total.carbs +=
+        Math.ceil(
+          ((parseFloat(item.product.carbs) * item.weight) / 100) * 100
+        ) / 100;
     },
     getCategories() {
       this.recipe.type.forEach((item, index, array) => {
@@ -273,9 +265,15 @@ export default {
         this.recipe = JSON.parse(localStorage.getItem(this.$route.params.id));
         this.getCategories();
         this.getMeals();
-        this.countTotal();
+
+        let vm = this;
+        this.recipe.ingredients.forEach((item, index, array) => {
+          vm.countTotal(item);
+        });
+
         this.loading = false;
       } catch (e) {
+        console.log(e);
         localStorage.removeItem(this.$route.params.id);
       }
     }

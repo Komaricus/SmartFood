@@ -21,7 +21,7 @@
           prepend-icon="lock"
           :error-messages="passwordErrors"
           :append-icon="loginPasswordVisible ? 'visibility' : 'visibility_off'"
-          :append-icon-cb="() => (loginPasswordVisible = !loginPasswordVisible)"
+          @click:append="() => (loginPasswordVisible = !loginPasswordVisible)"
           :type="loginPasswordVisible ? 'text' : 'password'"
           color="green lighten-1"
           required
@@ -64,6 +64,12 @@ export default {
       },
       message: ""
     };
+  },
+  created() {
+    if (this.$route.query.redirect) {
+      this.snackbar = true;
+      this.message = "Для этого нужно войти на сайт";
+    }
   },
   methods: {
     submitAuthentication() {

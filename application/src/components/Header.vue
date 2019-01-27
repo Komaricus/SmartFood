@@ -13,6 +13,10 @@
           :title="item.title"
           flat
         >{{ item.text }}</v-btn>
+        <v-btn v-if=" authenticated" to="/dashboard" flat>
+          <v-icon class="mr-2">person</v-icon>
+          {{this.$cookie.get('username')}}
+        </v-btn>
         <v-btn
           v-if=" authenticated"
           block
@@ -69,12 +73,24 @@
                 <v-list-tile-title :title="item.title">{{ item.text }}</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+
             <v-layout class="fab-container">
               <v-btn
                 v-if=" authenticated"
                 block
-                color="red lighten-1 white--text"
+                color="blue lighten-1 white--text"
                 class="nav-button"
+                to="/dashboard"
+              >
+                <v-icon class="mr-2">person</v-icon>
+                {{this.$cookie.get('username')}}
+              </v-btn>
+
+              <v-btn
+                v-if=" authenticated"
+                block
+                color="red lighten-1 white--text"
+                class="nav-button ml-2"
                 @click.native="submitSignout()"
               >Выйти</v-btn>
 

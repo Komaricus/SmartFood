@@ -75,20 +75,39 @@ const router = new Router({
       path: '/recipes/:category/:id',
       name: 'Recipe',
       component: Recipe
+    },
+    {
+      path: '/menu',
+      name: 'Menu',
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/diets',
+      name: 'Diets',
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 })
 
-// router.beforeEach((to, from, next) => {
-//   if (to.path !== '/login') {
-//     if (Auth.default.user.authenticated) {
-//       next()
-//     } else {
-//       router.push('/login')
-//     }
-//   } else {
-//     next()
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!Auth.default.user.authenticated) {
+      next({
+        path: '/login',
+        query: {
+          redirect: to.fullPath
+        }
+      })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
 
 export default router
