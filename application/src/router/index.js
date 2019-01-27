@@ -15,6 +15,11 @@ import RecipesMenu from '@/components/pages/Recipes/RecipesMenu'
 import RecipesList from '@/components/pages/Recipes/RecipesList/RecipesList'
 import Recipe from '@/components/pages/Recipes/Recipe'
 
+import Menu from '@/components/pages/Menu/Menu'
+import Diets from '@/components/pages/Diets/Diets'
+import Dashboard from '@/components/pages/Dashboard/Dashboard'
+import NotFound from '@/components/pages/NotFound'
+
 // Global components
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -79,6 +84,7 @@ const router = new Router({
     {
       path: '/menu',
       name: 'Menu',
+      component: Menu,
       meta: {
         requiresAuth: true
       }
@@ -86,14 +92,29 @@ const router = new Router({
     {
       path: '/diets',
       name: 'Diets',
+      component: Diets,
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: '/dashboard/:id',
+      name: 'Dashboard',
+      component: Dashboard,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '*',
+      name: '404',
+      component: NotFound
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
+  Auth.default.checkAuthentication();
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!Auth.default.user.authenticated) {
       next({

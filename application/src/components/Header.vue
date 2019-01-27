@@ -13,7 +13,7 @@
           :title="item.title"
           flat
         >{{ item.text }}</v-btn>
-        <v-btn v-if=" authenticated" to="/dashboard" flat>
+        <v-btn v-if=" authenticated" :to="'/dashboard/' + this.$cookie.get('user_id')" flat>
           <v-icon class="mr-2">person</v-icon>
           {{this.$cookie.get('username')}}
         </v-btn>
@@ -80,7 +80,7 @@
                 block
                 color="blue lighten-1 white--text"
                 class="nav-button"
-                to="/dashboard"
+                :to="'/dashboard/' + this.$cookie.get('user_id')"
               >
                 <v-icon class="mr-2">person</v-icon>
                 {{this.$cookie.get('username')}}

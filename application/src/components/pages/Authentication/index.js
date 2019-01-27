@@ -17,6 +17,7 @@ export default {
         context.$cookie.set('user_id', data.user._id, '1D')
         context.$cookie.set('name', data.user.name, '1D')
         context.$cookie.set('username', data.user.username, '1D')
+        context.$cookie.set('products', JSON.stringify(data.user.products), '1D')
         context.validLogin = true
 
         this.user.authenticated = true
@@ -36,6 +37,7 @@ export default {
     context.$cookie.delete('user_id')
     context.$cookie.delete('name')
     context.$cookie.delete('username')
+    context.$cookie.delete('products')
     this.user.authenticated = false
 
     router.go(0)

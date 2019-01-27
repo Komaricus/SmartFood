@@ -24,4 +24,17 @@ api.signup = (User) => (req, res) => {
 
 }
 
+api.update = (User) => (req, res) => {
+  User.findByIdAndUpdate(req.body.id, {
+    $set: {
+      products: req.body.products
+    }
+  }, {
+    new: true
+  }, function (err, user) {
+    if (err) return handleError(err);
+    res.send(user);
+  });
+}
+
 module.exports = api;
