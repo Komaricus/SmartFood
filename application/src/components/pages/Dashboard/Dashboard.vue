@@ -66,11 +66,44 @@
         </template>
       </v-data-table>
     </div>
+
+    <h1>Ваш холодильник</h1>
+    <v-data-table
+      :headers="fridgeHeaders"
+      :items="userData.products"
+      class="elevation-2"
+      :rows-per-page-items="[10,25,{'text':'Все','value':-1}]"
+      rows-per-page-text="Элементов на странице"
+    >
+      <template slot="items" slot-scope="props">
+        <tr>
+          <td>
+            <router-link
+              :to="`/products-menu/${props.item.type}/${props.item._id}`"
+            >{{ props.item.title }}</router-link>
+          </td>
+          <td class="text-xs-center">{{ props.item.cals }}</td>
+          <td class="text-xs-center">{{ props.item.prots }}</td>
+          <td class="text-xs-center">{{ props.item.fats }}</td>
+          <td class="text-xs-center">{{ props.item.carbs }}</td>
+        </tr>
+      </template>
+
+      <template
+        slot="pageText"
+        slot-scope="props"
+      >{{ props.pageStart }} - {{ props.pageStop }} из {{ props.itemsLength }}</template>
+      <template slot="no-data">
+        <v-alert :value="true" color="error" icon="warning">Холодильник пуст</v-alert>
+      </template>
+    </v-data-table>
+
     <v-snackbar bottom="bottom" color="green" v-model="snackbar">{{ message }}</v-snackbar>
   </v-container>
 </template>
 <script>
 import ProductsList from "@/components/pages/Products/ProductsList";
+import Dashboard from "@/components/pages/Dashboard";
 
 export default {
   data() {
@@ -100,6 +133,17 @@ export default {
         { title: "Крупы", category: "cereals" },
         { title: "Птица", category: "poultry" },
         { title: "Специи и соусы", category: "condiment" }
+      ],
+      fridgeHeaders: [
+        {
+          text: "Продукт (100г)",
+          align: "left",
+          value: "title"
+        },
+        { text: "Калории (кКал)", value: "cals" },
+        { text: "Жиры (г)", value: "fats" },
+        { text: "Белки (г)", value: "prots" },
+        { text: "Углеводы (г)", value: "carbs" }
       ]
     };
   },
@@ -125,6 +169,7 @@ export default {
     addProduct(product) {
       this.userData.products.push(product);
       this.$cookie.set("products", JSON.stringify(this.userData.products));
+      Dashboard.postUserProducts(this, this.userData);
     }
   }
 };

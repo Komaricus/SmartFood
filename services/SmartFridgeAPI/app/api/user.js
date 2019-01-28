@@ -25,7 +25,7 @@ api.signup = (User) => (req, res) => {
 }
 
 api.update = (User) => (req, res) => {
-  User.findByIdAndUpdate(req.body.id, {
+  User.findByIdAndUpdate(req.body.user_id, {
     $set: {
       products: req.body.products
     }
@@ -33,7 +33,10 @@ api.update = (User) => (req, res) => {
     new: true
   }, function (err, user) {
     if (err) return handleError(err);
-    res.send(user);
+    res.status(200).send({
+      success: true,
+      message: 'Продукт добавлен'
+    });
   });
 }
 
