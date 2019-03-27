@@ -73,7 +73,7 @@
             <v-spacer></v-spacer>
 
             <v-btn color="blue darken-1" flat @click="addProduct();">Добавить</v-btn>
-            <v-btn color="red darken-1" flat @click="$v.$reset(); dialog = false">Закрыть</v-btn>
+            <v-btn color="red darken-1" flat @click="resetDialog();">Закрыть</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -165,16 +165,19 @@ export default {
         var userData = {};
         userData.user_id = this.$cookie.get("user_id");
         userData.name = this.$cookie.get("name");
-        userData.products = JSON.parse(sessionStorage.getItem("products"));
+        userData.products = JSON.parse(localStorage.getItem("products"));
         userData.products.push(product);
-        sessionStorage.setItem("products", JSON.stringify(userData.products));
+        localStorage.setItem("products", JSON.stringify(userData.products));
         Dashboard.postUserProducts(this, userData);
 
-        this.days = "";
-        this.amount = "";
-        this.dialog = false;
-        this.$v.$reset();
+        this.resetDialog();
       }
+    },
+    resetDialog() {
+      this.days = "";
+      this.amount = "";
+      this.dialog = false;
+      this.$v.$reset();
     }
   },
   computed: {

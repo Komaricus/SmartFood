@@ -115,7 +115,7 @@
             <v-spacer></v-spacer>
 
             <v-btn color="blue darken-1" flat @click="addProduct(selectedProduct);">Добавить</v-btn>
-            <v-btn color="red darken-1" flat @click="$v.$reset(); dialog = false">Закрыть</v-btn>
+            <v-btn color="red darken-1" flat @click="resetDialog();">Закрыть</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -260,14 +260,15 @@ export default {
   created() {
     this.userData.user_id = this.$cookie.get("user_id");
     this.userData.name = this.$cookie.get("name");
-
-    this.$set(
-      this.userData,
-      "products",
-      sessionStorage.getItem("products")
-        ? JSON.parse(sessionStorage.getItem("products"))
-        : Dashboard.getUserProducts(this, this.userData.user_id)
-    );
+    if (localStorage.getItem("products")) {
+      this.$set(
+        this.userData,
+        "products",
+        JSON.parse(localStorage.getItem("products"))
+      );
+    } else {
+      Dashboard.getUserProducts(this, this.userData.user_id);
+    }
   },
   methods: {
     closeMenu() {
@@ -301,17 +302,20 @@ export default {
           amount: this.amount
         });
         this.userData.products.push(product);
-        sessionStorage.setItem(
+        localStorage.setItem(
           "products",
           JSON.stringify(this.userData.products)
         );
         Dashboard.postUserProducts(this, this.userData);
 
-        this.days = "";
-        this.amount = "";
-        this.dialog = false;
-        this.$v.$reset();
+        this.resetDialog();
       }
+    },
+    resetDialog() {
+      this.days = "";
+      this.amount = "";
+      this.dialog = false;
+      this.$v.$reset();
     }
   },
   computed: {

@@ -15,12 +15,17 @@ export default {
   },
 
   getUserProducts(context, user_id) {
-    Axios.post(`${SmartFridgeAPI}/api/v1/get/products/${user_id}`)
+    Axios.get(`${SmartFridgeAPI}/api/v1/get/products/${user_id}`)
       .then(({
         data
       }) => {
-        context.snackbar = true
-        context.message = data.message
+        context.$set(
+          context.userData,
+          "products",
+          data.user_products
+        );
+
+        localStorage.setItem("products", JSON.stringify(data.user_products));
       })
   }
 }
