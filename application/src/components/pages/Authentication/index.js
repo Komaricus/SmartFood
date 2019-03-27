@@ -1,7 +1,7 @@
-import Axios from 'axios'
-import router from '@/router'
+import Axios from 'axios';
+import router from '@/router';
 
-const SmartFridgeAPI = 'https://smart-food-app.herokuapp.com'
+const SmartFridgeAPI = 'https://smart-food-app.herokuapp.com';
 
 export default {
   user: {
@@ -17,7 +17,7 @@ export default {
         context.$cookie.set('user_id', data.user._id, '1D')
         context.$cookie.set('name', data.user.name, '1D')
         context.$cookie.set('username', data.user.username, '1D')
-        context.$cookie.set('products', JSON.stringify(data.user.products), '1D')
+        sessionStorage.setItem('products', JSON.stringify(data.user.products));
         context.validLogin = true
 
         this.user.authenticated = true
@@ -33,22 +33,22 @@ export default {
   },
 
   signout(context) {
-    context.$cookie.delete('token')
-    context.$cookie.delete('user_id')
-    context.$cookie.delete('name')
-    context.$cookie.delete('username')
-    context.$cookie.delete('products')
-    this.user.authenticated = false
+    context.$cookie.delete('token');
+    context.$cookie.delete('user_id');
+    context.$cookie.delete('name');
+    context.$cookie.delete('username');
+    context.$cookie.delete('products');
+    this.user.authenticated = false;
 
-    router.go(0)
+    router.go(0);
   },
 
   checkAuthentication() {
-    const token = document.cookie
-    this.user.authenticated = !!token
+    const token = document.cookie;
+    this.user.authenticated = !!token;
   },
 
   getAuthenticationHeader(context) {
-    return `Bearer ${context.$cookie.get('token')}`
+    return `Bearer ${context.$cookie.get('token')}`;
   }
-}
+};

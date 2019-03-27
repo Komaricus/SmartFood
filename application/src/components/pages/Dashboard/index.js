@@ -12,5 +12,15 @@ export default {
         context.snackbar = true
         context.message = data.message
       })
+  },
+
+  getUserProducts(context, user_id) {
+    Axios.post(`${SmartFridgeAPI}/api/v1/get/products/${user_id}`)
+      .then(({
+        data
+      }) => {
+        context.snackbar = true
+        context.message = data.message
+      })
   }
 }

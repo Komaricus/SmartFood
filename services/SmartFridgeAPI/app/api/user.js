@@ -40,4 +40,15 @@ api.update = (User) => (req, res) => {
   });
 }
 
+api.getUserProducts = (User) => (req, res) => {
+  User.findById(
+    req.params.user_id, (err, user) => {
+      if (err) return handleError(err);
+      res.status(200).send({
+        success: true,
+        user_products: user.products
+      });
+    });
+}
+
 module.exports = api;
