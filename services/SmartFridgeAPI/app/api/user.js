@@ -8,7 +8,8 @@ api.signup = (User) => (req, res) => {
     password: req.body.password,
     email: req.body.email,
     name: req.body.name,
-    products: []
+    products: [],
+    dishes: []
   });
 
   user.save(error => {
@@ -24,7 +25,7 @@ api.signup = (User) => (req, res) => {
 
 }
 
-api.update = (User) => (req, res) => {
+api.updateProducts = (User) => (req, res) => {
   User.findByIdAndUpdate(req.body.user_id, {
     $set: {
       products: req.body.products
@@ -40,6 +41,23 @@ api.update = (User) => (req, res) => {
   });
 }
 
+api.updateDishes = (User) => (req, res) => {
+  User.findByIdAndUpdate(req.body.user_id, {
+    $set: {
+      dishes: req.body.dishes
+    }
+  }, {
+    new: true
+  }, function (err, user) {
+    if (err) return handleError(err);
+    res.status(200).send({
+      success: true,
+      message: 'Блюдо добавлено',
+      user: user
+    });
+  });
+}
+
 api.getUserProducts = (User) => (req, res) => {
   User.findById(
     req.params.user_id, (err, user) => {
@@ -51,4 +69,14 @@ api.getUserProducts = (User) => (req, res) => {
     });
 }
 
+api.getUserDishes = (User) => (req, res) => {
+  User.findById(
+    req.params.user_id, (err, user) => {
+      if (err) return handleError(err);
+      res.status(200).send({
+        success: true,
+        user_dishes: user.dishes
+      });
+    });
+}
 module.exports = api;

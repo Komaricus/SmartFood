@@ -24,9 +24,15 @@ import NotFound from '@/components/pages/NotFound'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
+// Dashboard components
+import Fridge from '@/components/pages/Dashboard/Fridge'
+import Supplement from '@/components/pages/Dashboard/Supplement'
+
 // Register components
 Vue.component('app-header', Header)
 Vue.component('app-footer', Footer)
+Vue.component('fridge', Fridge)
+Vue.component('supplement', Supplement)
 
 Vue.use(Router)
 
@@ -100,7 +106,11 @@ const router = new Router({
     {
       path: '/dashboard/:id',
       name: 'Dashboard',
-      component: Dashboard,
+      components: {
+        default: Dashboard,
+        fridge: Fridge,
+        supplement: Supplement
+      },
       meta: {
         requiresAuth: true
       }

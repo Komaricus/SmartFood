@@ -25,6 +25,10 @@ const Schema = mongoose.Schema({
 
   products: {
     type: Array
+  },
+
+  dishes: {
+    type: Array
   }
 });
 

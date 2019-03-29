@@ -17,7 +17,8 @@ api.createRecipe = (Recipe) => (req, res) => {
       ingredients: req.body.ingredients,
       meal: req.body.meal,
       portions: req.body.portions,
-      method: req.body.method
+      method: req.body.method,
+      days: req.body.days
     });
 
     recipe.save(error => {

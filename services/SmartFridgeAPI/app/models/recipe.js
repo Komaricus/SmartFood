@@ -32,6 +32,10 @@ const Schema = mongoose.Schema({
 
   method: {
     type: String
+  },
+
+  days: {
+    type: Number
   }
 });
 

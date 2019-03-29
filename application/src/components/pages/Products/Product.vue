@@ -30,7 +30,11 @@
           </tbody>
         </v-card-text>
       </v-card>
-      <v-btn v-if="authenticated" @click="dialog = true;">Добавить в холодильник</v-btn>
+      <v-btn
+        v-if="authenticated"
+        @click="dialog = true;"
+        color="yellow lighten-1"
+      >Добавить в холодильник</v-btn>
     </v-layout>
 
     <v-layout row justify-center>
@@ -158,15 +162,30 @@ export default {
         this.$v.$touch();
       } else {
         this.snackbarColor = "green";
-        var product = Object.assign(this.product, {
-          days: this.days,
-          amount: this.amount
-        });
+
+        var newProduct = {};
+
+        for (var key in this.product) {
+          newProduct[key] = this.product[key];
+        }
+
+        var currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + +this.days);
+        newProduct.days = `${
+          currentDate.getDate() < 10
+            ? "0" + currentDate.getDate()
+            : currentDate.getDate()
+        }.${
+          currentDate.getMonth() < 10
+            ? "0" + (currentDate.getMonth() + 1)
+            : currentDate.getMonth()
+        }.${currentDate.getFullYear()}`;
+        newProduct.amount = this.amount;
         var userData = {};
         userData.user_id = this.$cookie.get("user_id");
         userData.name = this.$cookie.get("name");
         userData.products = JSON.parse(localStorage.getItem("products"));
-        userData.products.push(product);
+        userData.products.push(newProduct);
         localStorage.setItem("products", JSON.stringify(userData.products));
         Dashboard.postUserProducts(this, userData);
 
@@ -214,5 +233,14 @@ export default {
 
 td {
   width: 50%;
+}
+
+#fridge-link {
+  color: white;
+  text-decoration: underline;
+}
+
+#fridge-link:hover {
+  color: orange;
 }
 </style>

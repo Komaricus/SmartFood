@@ -20,6 +20,11 @@
             </div>
             <h3>Количество порций</h3>
             <p>{{ recipe.portions }}</p>
+            <v-btn
+              v-if="authenticated"
+              @click="dialog = true;"
+              color="yellow lighten-1"
+            >Добавить в холодильник</v-btn>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -108,22 +113,82 @@
         </v-card>
       </v-flex>
     </v-layout>
+
+    <v-layout row justify-center>
+      <v-dialog v-model="dialog" persistent max-width="600px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Параметры рецепта</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container grid-list-md>
+              <v-layout wrap>
+                <v-flex xs12>
+                  <v-text-field
+                    v-model="days"
+                    label="Срок годности"
+                    hint="Указывается в днях"
+                    :error-messages="daysErrors"
+                    color="green lighten-1"
+                    required
+                    @input="$v.days.$touch()"
+                    @blur="$v.days.$touch()"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn color="blue darken-1" flat @click="addRecipe();">Добавить</v-btn>
+            <v-btn color="red darken-1" flat @click="resetDialog();">Закрыть</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-layout>
+
+    <v-snackbar bottom="bottom" :color="snackbarColor" v-model="snackbar">{{ message }}</v-snackbar>
   </v-container>
 </template>
 <script>
 import Axios from "axios";
 import RecipesList from "@/components/pages/Recipes/RecipesList";
 import router from "@/router";
+import Authentication from "@/components/pages/Authentication";
+import Dashboard from "@/components/pages/Dashboard";
+import { validationMixin } from "vuelidate";
+import {
+  required,
+  numeric,
+  minValue,
+  maxValue
+} from "vuelidate/lib/validators";
 
 const SmartFridgeAPI = "https://smart-food-app.herokuapp.com";
 
 export default {
+  mixins: [validationMixin],
+  validations: {
+    days: {
+      required,
+      numeric,
+      minValue: minValue(1),
+      maxValue: maxValue(2000)
+    }
+  },
   data() {
     return {
+      authenticated: Authentication.user.authenticated,
       image: "",
+      snackbar: false,
+      message: "",
+      snackbarColor: "",
+      days: "",
       recipe: {},
       categories: [],
       meals: [],
+      dialog: false,
       headers: [
         {
           text: "Продукт",
@@ -257,6 +322,49 @@ export default {
     },
     redirect(type, id) {
       router.push("../../products-menu/" + type + "/" + id);
+    },
+    addRecipe() {
+      if (this.$v.$invalid) {
+        this.snackbarColor = "red";
+        this.snackbar = true;
+        this.message = "Заполните обязательные поля";
+
+        this.$v.$touch();
+      } else {
+        this.snackbarColor = "green";
+
+        var newDish = {};
+
+        for (var key in this.recipe) {
+          newDish[key] = this.recipe[key];
+        }
+
+        var currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + +this.days);
+        newDish.days = `${
+          currentDate.getDate() < 10
+            ? "0" + currentDate.getDate()
+            : currentDate.getDate()
+        }.${
+          currentDate.getMonth() < 10
+            ? "0" + (currentDate.getMonth() + 1)
+            : currentDate.getMonth()
+        }.${currentDate.getFullYear()}`;
+        var userData = {};
+        userData.user_id = this.$cookie.get("user_id");
+        userData.name = this.$cookie.get("name");
+        userData.dishes = JSON.parse(localStorage.getItem("dishes"));
+        userData.dishes.push(newDish);
+        localStorage.setItem("dishes", JSON.stringify(userData.dishes));
+        Dashboard.postUserDishes(this, userData);
+
+        this.resetDialog();
+      }
+    },
+    resetDialog() {
+      this.days = "";
+      this.dialog = false;
+      this.$v.$reset();
     }
   },
   mounted() {
@@ -276,6 +384,17 @@ export default {
         console.log(e);
         localStorage.removeItem(this.$route.params.id);
       }
+    }
+  },
+  computed: {
+    daysErrors() {
+      const errors = [];
+      if (!this.$v.days.$dirty) return errors;
+      !this.$v.days.required && errors.push("Введите количество дней");
+      !this.$v.days.numeric && errors.push("Должно быть целым числом");
+      !this.$v.days.minValue && errors.push("Минимальное значение: 1");
+      !this.$v.days.maxValue && errors.push("Превышено максимальное значение");
+      return errors;
     }
   }
 };
