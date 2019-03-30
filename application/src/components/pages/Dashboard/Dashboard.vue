@@ -17,7 +17,14 @@
 
       <v-tab-item value="fridge">
         <v-card flat>
-          <fridge :user="userData"></fridge>
+          <fridge
+            :user="userData"
+            @deleteProduct="deleteProduct"
+            @deleteDish="deleteDish"
+            @messageChange="showMessage"
+            @productChanged="changeProduct"
+            @dishChanged="changeDish"
+          ></fridge>
         </v-card>
       </v-tab-item>
 
@@ -119,13 +126,44 @@ export default {
       localStorage.setItem("products", JSON.stringify(this.userData.products));
       Dashboard.postUserProducts(this, this.userData);
     },
-
     addDish(dish) {
       this.snackbarColor = "green";
 
       this.userData.dishes.push(dish);
       localStorage.setItem("dishes", JSON.stringify(this.userData.dishes));
       Dashboard.postUserDishes(this, this.userData);
+    },
+    deleteProduct(product) {
+      this.snackbarColor = "green";
+
+      const index = this.userData.products.indexOf(product);
+      this.userData.products.splice(index, 1);
+      localStorage.setItem("products", JSON.stringify(this.userData.products));
+      Dashboard.postUserProducts(this, this.userData, "Продукт удалён");
+    },
+    deleteDish(dish) {
+      this.snackbarColor = "green";
+
+      const index = this.userData.dishes.indexOf(dish);
+      this.userData.dishes.splice(index, 1);
+      localStorage.setItem("dishes", JSON.stringify(this.userData.dishes));
+      Dashboard.postUserDishes(this, this.userData, "Блюдо удалено");
+    },
+    changeProduct(product) {
+      this.snackbarColor = "green";
+
+      const index = this.userData.products.indexOf(product);
+      this.userData.products[index].amount = product.amount;
+      localStorage.setItem("products", JSON.stringify(this.userData.products));
+      Dashboard.postUserProducts(this, this.userData, "Изменения сохранены");
+    },
+    changeDish(dish) {
+      this.snackbarColor = "green";
+
+      const index = this.userData.dishes.indexOf(dish);
+      this.userData.dishes[index].portions = dish.portions;
+      localStorage.setItem("dishes", JSON.stringify(this.userData.dishes));
+      Dashboard.postUserDishes(this, this.userData, "Изменения сохранены");
     }
   }
 };

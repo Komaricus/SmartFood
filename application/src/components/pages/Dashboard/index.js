@@ -5,13 +5,13 @@ const SmartFridgeAPI = 'https://smart-food-app.herokuapp.com'
 
 export default {
 
-  postUserProducts(context, user) {
+  postUserProducts(context, user, message) {
     Axios.post(`${SmartFridgeAPI}/api/v1/update`, user)
       .then(({
         data
       }) => {
-        context.snackbar = true
-        context.message = data.message
+        context.snackbar = true;
+        message ? context.message = message : context.message = data.message;
       })
   },
 
@@ -30,13 +30,13 @@ export default {
       })
   },
 
-  postUserDishes(context, user) {
+  postUserDishes(context, user, message) {
     Axios.post(`${SmartFridgeAPI}/api/v1/update/dishes`, user)
       .then(({
         data
       }) => {
         context.snackbar = true
-        context.message = data.message
+        message ? context.message = message : context.message = data.message;
       })
   },
 
