@@ -161,6 +161,33 @@
         </v-card>
       </v-tab-item>
     </v-tabs>
+
+    <v-layout row justify-center>
+      <v-dialog v-model="dialog" max-width="600px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Истечение срока годности</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container grid-list-md>
+              <v-layout wrap>
+                <v-flex xs12>
+                  <div>У следующих продуктов и блюд скоро истечёт срок годности:</div>
+                  <br>
+                  <div v-for="(item, i) in outOfDate" :key="i">{{ item.title }} - {{ item.days }}</div>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn color="blue darken-1" flat to="/menu">Меню</v-btn>
+            <v-btn color="red darken-1" flat @click="resetDialog()">Закрыть</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-layout>
   </div>
 </template>
 <script>
@@ -178,13 +205,15 @@ export default {
     amount: {
       required,
       numeric,
-      minValue: minValue(1),
+      minValue: minValue(0),
       maxValue: maxValue(100000)
     }
   },
   props: ["user"],
   data() {
     return {
+      dialog: false,
+      outOfDate: [],
       amount: "",
       selectedProduct: {},
       selectedDish: {},
@@ -241,15 +270,21 @@ export default {
         this.selectedProduct.amount
       ) {
         this.selectedProduct.amount = this.amount;
-
-        this.$emit("productChanged", this.selectedProduct);
+        if (+this.selectedProduct.amount == 0) {
+          this.$emit("deleteProduct", this.selectedProduct);
+        } else {
+          this.$emit("productChanged", this.selectedProduct);
+        }
       } else if (
         this.selectedDish.portions != this.amount &&
         this.selectedDish.portions
       ) {
         this.selectedDish.portions = this.amount;
-
-        this.$emit("dishChanged", this.selectedDish);
+        if (+this.selectedDish.portions == 0) {
+          this.$emit("deleteDish", this.selectedDish);
+        } else {
+          this.$emit("dishChanged", this.selectedDish);
+        }
       }
     },
     cancel() {
@@ -265,6 +300,48 @@ export default {
       this.amount = "";
       this.selectedProduct = {};
       this.selectedDish = {};
+    },
+    resetDialog() {
+      this.dialog = false;
+      this.outOfDate = [];
+    }
+  },
+  created() {
+    if (!sessionStorage.getItem("outOfDate")) {
+      var currentDate = new Date();
+
+      for (var i = 0; i < this.$props.user.products.length; i++) {
+        var dateParams = this.$props.user.products[i].days.split(".");
+
+        var itemDate = new Date(
+          +dateParams[2],
+          +dateParams[1] - 1,
+          +dateParams[0]
+        );
+
+        if ((itemDate - currentDate) / (1000 * 3600 * 24) <= 3) {
+          this.outOfDate.push(this.$props.user.products[i]);
+        }
+      }
+
+      for (var i = 0; i < this.$props.user.dishes.length; i++) {
+        var dateParams = this.$props.user.dishes[i].days.split(".");
+
+        var itemDate = new Date(
+          +dateParams[2],
+          +dateParams[1] - 1,
+          +dateParams[0]
+        );
+
+        if ((itemDate - currentDate) / (1000 * 3600 * 24) <= 3) {
+          this.outOfDate.push(this.$props.user.dishes[i]);
+        }
+      }
+
+      if (this.outOfDate.length > 0) {
+        this.dialog = true;
+        sessionStorage.setItem("outOfDate", false);
+      }
     }
   },
   computed: {
@@ -273,7 +350,7 @@ export default {
       if (!this.$v.amount.$dirty) return errors;
       !this.$v.amount.required && errors.push("Заполните поле");
       !this.$v.amount.numeric && errors.push("Должно быть целым числом");
-      !this.$v.amount.minValue && errors.push("Минимальное значение: 1");
+      !this.$v.amount.minValue && errors.push("Минимальное значение: 0");
       !this.$v.amount.maxValue &&
         errors.push("Превышено максимальное значение");
       return errors;
