@@ -103,6 +103,7 @@
                         :error-messages="amountErrors"
                         color="green lighten-1"
                         required
+                        @keyup.enter="addButtonClicked()"
                         @input="$v.amount.$touch()"
                         @blur="$v.amount.$touch()"
                       ></v-text-field>
@@ -115,6 +116,7 @@
                         :error-messages="daysErrors"
                         color="green lighten-1"
                         required
+                        @keyup.enter="addButtonClicked()"
                         @input="$v.days.$touch()"
                         @blur="$v.days.$touch()"
                       ></v-text-field>

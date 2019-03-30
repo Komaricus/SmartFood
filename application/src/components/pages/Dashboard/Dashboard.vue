@@ -120,16 +120,54 @@ export default {
       this.snackbar = message.snackbar;
     },
     addProduct(product) {
-      this.snackbarColor = "green";
+      // Search for existing product with same exdate
+      var index = -1;
+      for (var i = 0; i < this.userData.products.length; i++) {
+        if (
+          this.userData.products[i]._id == product._id &&
+          this.userData.products[i].days == product.days
+        ) {
+          index = i;
+          break;
+        }
+      }
 
-      this.userData.products.push(product);
+      // Summing amount for existing product or adding new product
+      if (index != -1) {
+        this.userData.products[index].amount =
+          +this.userData.products[index].amount + +product.amount;
+      } else {
+        this.userData.products.push(product);
+      }
+
+      // Update user products in local storage and DB
+      this.snackbarColor = "green";
       localStorage.setItem("products", JSON.stringify(this.userData.products));
       Dashboard.postUserProducts(this, this.userData);
     },
     addDish(dish) {
-      this.snackbarColor = "green";
+      // Search for existing dish with same exdate
+      var index = -1;
+      for (var i = 0; i < this.userData.dishes.length; i++) {
+        if (
+          this.userData.dishes[i]._id == dish._id &&
+          this.userData.dishes[i].days == dish.days
+        ) {
+          index = i;
+          break;
+        }
+      }
 
-      this.userData.dishes.push(dish);
+      // Summing portions for existing dish or adding new dish
+      if (index != -1) {
+        this.userData.dishes[index].portions =
+          +this.userData.dishes[index].portions + +dish.portions;
+      } else {
+        this.userData.dishes.push(dish);
+      }
+
+      // Update user dishes in local storage and DB
+      this.snackbarColor = "green";
       localStorage.setItem("dishes", JSON.stringify(this.userData.dishes));
       Dashboard.postUserDishes(this, this.userData);
     },
