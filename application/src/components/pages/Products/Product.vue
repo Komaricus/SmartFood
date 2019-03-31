@@ -88,6 +88,7 @@
 </template>
 <script>
 import Axios from "axios";
+import { BACK_END_URL } from '@/router';
 import Authentication from "@/components/pages/Authentication";
 import Dashboard from "@/components/pages/Dashboard";
 import { validationMixin } from "vuelidate";
@@ -97,8 +98,6 @@ import {
   minValue,
   maxValue
 } from "vuelidate/lib/validators";
-
-const SmartFridgeAPI = "https://smart-food-app.herokuapp.com";
 
 export default {
   mixins: [validationMixin],
@@ -132,7 +131,7 @@ export default {
   async created() {
     let vm = this;
     if (!localStorage.getItem(this.$route.params.id)) {
-      await Axios.get(`${SmartFridgeAPI}/product/${vm.$route.params.id}`)
+      await Axios.get(`${BACK_END_URL}/product/${vm.$route.params.id}`)
         .then(function(response) {
           vm.product = response.data[0];
           const parsed = JSON.stringify(vm.product);

@@ -1,13 +1,12 @@
 import Axios from 'axios'
 import Authentication from "@/components/pages/Authentication";
-
-const SmartFridgeAPI = 'https://smart-food-app.herokuapp.com'
+import { BACK_END_URL } from '@/router'
 
 export default {
 
   signup(context, credentials, redirect) {
 
-    Axios.post(`${SmartFridgeAPI}/api/v1/signup`, credentials)
+    Axios.post(`${BACK_END_URL}/api/v1/signup`, credentials)
       .then(() => {
         context.validSignUp = true
 
