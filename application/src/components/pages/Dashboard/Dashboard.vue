@@ -13,7 +13,7 @@
 
       <v-tab href="#diet">Диета</v-tab>
 
-      <v-tab href="#list">Список покупок</v-tab>
+      <v-tab href="#shopping-list">Список покупок</v-tab>
 
       <v-tab-item value="fridge">
         <v-card flat>
@@ -30,7 +30,12 @@
 
       <v-tab-item value="supplement">
         <v-card flat>
-          <supplement @messageChange="showMessage" @productAdded="addProduct" @dishAdded="addDish"></supplement>
+          <supplement
+            @messageChange="showMessage"
+            @productAdded="addProduct"
+            @dishAdded="addDish"
+            @itemAddedToList="updateShoppingList"
+          ></supplement>
         </v-card>
       </v-tab-item>
 
@@ -41,10 +46,11 @@
         </v-card>
       </v-tab-item>
 
-      <v-tab-item value="list">
+      <v-tab-item value="shopping-list">
         <v-card flat>
           <!-- Список покупок -->
           <!-- Возможность отследить наличие выбранных продуктов в холодильнике -->
+          <shopping-list :user="userData"></shopping-list>
         </v-card>
       </v-tab-item>
     </v-tabs>
@@ -112,12 +118,47 @@ export default {
     } else {
       Dashboard.getUserDishes(this, this.userData.user_id);
     }
+
+    // Load user shopping list
+    if (localStorage.getItem("list")) {
+      this.$set(
+        this.userData,
+        "list",
+        JSON.parse(localStorage.getItem("list"))
+      );
+    } else {
+      Dashboard.getUserShoppingList(this, this.userData.user_id);
+    }
   },
   methods: {
     showMessage(message) {
       this.snackbarColor = message.snackbarColor;
       this.message = message.message;
       this.snackbar = message.snackbar;
+    },
+    updateShoppingList(item, type) {
+      // Search for existing item in shopping list
+
+      var index = -1;
+      for (var i = 0; i < this.userData.list[type].items.length; i++) {
+        if (this.userData.list[type].items[i]._id == item._id) {
+          index = i;
+          break;
+        }
+      }
+
+      // Message about existing item or adding item to shopping list
+      if (index != -1) {
+        this.snackbarColor = "orange";
+        this.message = "Уже добавлено в список покупок";
+      } else {
+        this.snackbarColor = "green";
+        this.userData.list[type].items.push(item);
+        localStorage.setItem("list", JSON.stringify(this.userData.list));
+        Dashboard.postUserShoppingList(this, this.userData);
+      }
+
+      this.snackbar = true;
     },
     addProduct(product) {
       // Search for existing product with same exdate

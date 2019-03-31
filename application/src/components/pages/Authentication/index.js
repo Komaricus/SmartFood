@@ -19,6 +19,7 @@ export default {
         context.$cookie.set('username', data.user.username, '1D')
         localStorage.setItem('products', JSON.stringify(data.user.products));
         localStorage.setItem('dishes', JSON.stringify(data.user.dishes));
+        localStorage.setItem('list', JSON.stringify(data.user.list));
         context.validLogin = true
 
         this.user.authenticated = true
@@ -41,6 +42,7 @@ export default {
 
     localStorage.removeItem('products');
     localStorage.removeItem('dishes');
+    localStorage.removeItem('list');
     this.user.authenticated = false;
 
     router.go(0);

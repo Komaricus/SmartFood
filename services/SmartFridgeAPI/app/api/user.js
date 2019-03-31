@@ -9,7 +9,48 @@ api.signup = (User) => (req, res) => {
     email: req.body.email,
     name: req.body.name,
     products: [],
-    dishes: []
+    dishes: [],
+    list: [{
+        "title": "Фрукты",
+        "active": true,
+        "items": []
+      },
+      {
+        "title": "Овощи",
+        "active": true,
+        "items": []
+      },
+      {
+        "title": "Мясо",
+        "active": true,
+        "items": []
+      },
+      {
+        "title": "Морепродукты",
+        "active": true,
+        "items": []
+      },
+      {
+        "title": "Молочные продукты",
+        "active": true,
+        "items": []
+      },
+      {
+        "title": "Крупы и мучные изделия",
+        "active": true,
+        "items": []
+      },
+      {
+        "title": "Птица",
+        "active": true,
+        "items": []
+      },
+      {
+        "title": "Специи и соусы",
+        "active": true,
+        "items": []
+      }
+    ]
   });
 
   user.save(error => {
@@ -52,8 +93,23 @@ api.updateDishes = (User) => (req, res) => {
     if (err) return handleError(err);
     res.status(200).send({
       success: true,
-      message: 'Блюдо добавлено',
-      user: user
+      message: 'Блюдо добавлено'
+    });
+  });
+}
+
+api.updateShoppingList = (User) => (req, res) => {
+  User.findByIdAndUpdate(req.body.user_id, {
+    $set: {
+      list: req.body.list
+    }
+  }, {
+    new: true
+  }, function (err, user) {
+    if (err) return handleError(err);
+    res.status(200).send({
+      success: true,
+      message: 'Список покупок обновлен'
     });
   });
 }
@@ -76,6 +132,17 @@ api.getUserDishes = (User) => (req, res) => {
       res.status(200).send({
         success: true,
         user_dishes: user.dishes
+      });
+    });
+}
+
+api.getUserShoppingList = (User) => (req, res) => {
+  User.findById(
+    req.params.user_id, (err, user) => {
+      if (err) return handleError(err);
+      res.status(200).send({
+        success: true,
+        user_list: user.list
       });
     });
 }

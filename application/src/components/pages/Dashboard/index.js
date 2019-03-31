@@ -1,7 +1,7 @@
 import Axios from 'axios'
 
-const SmartFridgeAPI = 'https://smart-food-app.herokuapp.com'
-// const SmartFridgeAPI = 'http://localhost:3001'
+// const SmartFridgeAPI = 'https://smart-food-app.herokuapp.com'
+const SmartFridgeAPI = 'http://localhost:3001'
 
 export default {
 
@@ -52,6 +52,31 @@ export default {
         );
 
         localStorage.setItem("dishes", JSON.stringify(data.user_dishes));
+      })
+  },
+
+  postUserShoppingList(context, user, message) {
+    Axios.post(`${SmartFridgeAPI}/api/v1/update/shopping-list`, user)
+      .then(({
+        data
+      }) => {
+        context.snackbar = true
+        message ? context.message = message : context.message = data.message;
+      })
+  },
+
+  getUserShoppingList(context, user_id) {
+    Axios.get(`${SmartFridgeAPI}/api/v1/get/shopping-list/${user_id}`)
+      .then(({
+        data
+      }) => {
+        context.$set(
+          context.userData,
+          "list",
+          data.user_list
+        );
+
+        localStorage.setItem("list", JSON.stringify(data.user_list));
       })
   }
 }

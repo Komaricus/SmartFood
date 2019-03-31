@@ -29,6 +29,10 @@ const Schema = mongoose.Schema({
 
   dishes: {
     type: Array
+  },
+
+  list: {
+    type: Array
   }
 });
 

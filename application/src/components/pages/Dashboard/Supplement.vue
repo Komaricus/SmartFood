@@ -65,6 +65,16 @@
                   <v-icon>add</v-icon>
                 </v-btn>
               </td>
+              <td class="text-xs-center">
+                <v-btn
+                  flat
+                  icon
+                  color="orange"
+                  @click.stop="selectedProduct = props.item; addToShoppingListButtonClicked()"
+                >
+                  <v-icon>check_circle_outline</v-icon>
+                </v-btn>
+              </td>
             </tr>
           </template>
           <v-alert
@@ -264,8 +274,9 @@ export default {
           align: "left",
           value: "title"
         },
-        { text: "Калории (кКал)", value: "cals" },
-        { text: "Добавить", sortable: false }
+        { text: "Калории (кКал)", align: "center", value: "cals" },
+        { text: "В холодильник", align: "center", sortable: false },
+        { text: "В список покупок", align: "center", sortable: false }
       ],
       dishesHeaders: [
         {
@@ -273,8 +284,8 @@ export default {
           align: "left",
           value: "title"
         },
-        { text: "Порции", value: "portions" },
-        { text: "Добавить", sortable: false }
+        { text: "Порции", align: "center", value: "portions" },
+        { text: "В холодильник", align: "center", sortable: false }
       ],
       productsItems: [
         { title: "Фрукты", category: "fruits" },
@@ -295,10 +306,29 @@ export default {
         { title: "Напитки", category: "drinks" },
         { title: "Десерты", category: "deserts" },
         { title: "Другие рецепты", category: "others" }
+      ],
+      types: [
+        "fruits",
+        "vegetables",
+        "meat",
+        "seafood",
+        "dairy",
+        "cereals",
+        "poultry",
+        "condiment"
       ]
     };
   },
   methods: {
+    addToShoppingListButtonClicked() {
+      var item = {};
+      item._id = this.selectedProduct._id;
+      item.title = this.selectedProduct.title;
+      var type = this.types.indexOf(this.selectedProduct.type);
+      item.amount = 0;
+
+      this.$emit("itemAddedToList", item, type);
+    },
     async clickProductsMenu(category) {
       this.loadProducts = true;
       this.productsCategorySelected = true;

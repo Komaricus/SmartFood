@@ -27,12 +27,14 @@ import Footer from '@/components/Footer'
 // Dashboard components
 import Fridge from '@/components/pages/Dashboard/Fridge'
 import Supplement from '@/components/pages/Dashboard/Supplement'
+import ShoppingList from '@/components/pages/Dashboard/ShoppingList'
 
 // Register components
 Vue.component('app-header', Header)
 Vue.component('app-footer', Footer)
 Vue.component('fridge', Fridge)
 Vue.component('supplement', Supplement)
+Vue.component('shopping-list', ShoppingList)
 
 Vue.use(Router)
 
@@ -109,7 +111,8 @@ const router = new Router({
       components: {
         default: Dashboard,
         fridge: Fridge,
-        supplement: Supplement
+        supplement: Supplement,
+        "shopping-list": ShoppingList
       },
       meta: {
         requiresAuth: true
