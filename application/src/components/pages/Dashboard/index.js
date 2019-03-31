@@ -55,7 +55,7 @@ export default {
   },
 
   postUserShoppingList(context, user, message) {
-    Axios.post(`${SmartFridgeAPI}/api/v1/update/shopping-list`, user)
+    Axios.post(`${BACK_END_URL}/api/v1/update/shopping-list`, user)
       .then(({
         data
       }) => {
@@ -65,7 +65,7 @@ export default {
   },
 
   getUserShoppingList(context, user_id) {
-    Axios.get(`${SmartFridgeAPI}/api/v1/get/shopping-list/${user_id}`)
+    Axios.get(`${BACK_END_URL}/api/v1/get/shopping-list/${user_id}`)
       .then(({
         data
       }) => {

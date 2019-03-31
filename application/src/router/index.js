@@ -16,18 +16,19 @@ import RecipesList from '@/components/pages/Recipes/RecipesList/RecipesList'
 import Recipe from '@/components/pages/Recipes/Recipe'
 
 import Menu from '@/components/pages/Menu/Menu'
+import Dashboard from '@/components/pages/Dashboard/Dashboard'
+import NotFound from '@/components/pages/NotFound'
+
 import Diets from '@/components/pages/Diets/Diets'
 import DietsList from '@/components/pages/Diets/DietsList/DietsList'
 import DietItem from '@/components/pages/Diets/DietItem'
-import Dashboard from '@/components/pages/Dashboard/Dashboard'
-import NotFound from '@/components/pages/NotFound'
 
 // Global components
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
 // BE_URL
-export const BACK_END_URL = 'https://smart-food-app.herokuapp.com'
+export const BACK_END_URL = 'http://localhost:3001'
 
 // Dashboard components
 import Fridge from '@/components/pages/Dashboard/Fridge'

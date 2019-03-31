@@ -36,7 +36,6 @@ const Schema = mongoose.Schema({
   }
 });
 
-// We won't use arrow functions here because of automatic lexical scope binding
 Schema.pre('save', function (next) {
   const user = this;
 
