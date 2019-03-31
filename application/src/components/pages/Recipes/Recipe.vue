@@ -154,7 +154,7 @@
 <script>
 import Axios from "axios";
 import RecipesList from "@/components/pages/Recipes/RecipesList";
-import router from "@/router";
+import router, { BACK_END_URL } from '@/router'
 import Authentication from "@/components/pages/Authentication";
 import Dashboard from "@/components/pages/Dashboard";
 import { validationMixin } from "vuelidate";
@@ -240,7 +240,7 @@ export default {
   async beforeCreate() {
     if (!localStorage.getItem(this.$route.params.id)) {
       let vm = this;
-      await Axios.get(`${SmartFridgeAPI}/recipe/${vm.$route.params.id}`)
+      await Axios.get(`${BACK_END_URL}/recipe/${vm.$route.params.id}`)
         .then(function(response) {
           vm.recipe = response.data[0];
           vm.getCategories();
@@ -253,7 +253,7 @@ export default {
         });
 
       await vm.recipe.ingredients.forEach((item, index, array) => {
-        Axios.get(`${SmartFridgeAPI}/product/${item.id}`)
+        Axios.get(`${BACK_END_URL}/product/${item.id}`)
           .then(function(response) {
             vm.$set(item, "product", response.data[0]);
             const parsed = JSON.stringify(vm.recipe);

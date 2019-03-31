@@ -1,13 +1,12 @@
 import Axios from 'axios'
-
-const SmartFridgeAPI = 'https://smart-food-app.herokuapp.com'
+import { BACK_END_URL } from '@/router'
 
 export default class ProductsList {
 
   static getProducts(category) {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await Axios.get(`${SmartFridgeAPI}/products/${category}`);
+        const res = await Axios.get(`${BACK_END_URL}/products/${category}`);
         const data = res.data;
         resolve(
           data.map(product => ({
