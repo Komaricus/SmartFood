@@ -17,12 +17,17 @@ import Recipe from '@/components/pages/Recipes/Recipe'
 
 import Menu from '@/components/pages/Menu/Menu'
 import Diets from '@/components/pages/Diets/Diets'
+import DietsList from '@/components/pages/Diets/DietsList/DietsList'
+import DietItem from '@/components/pages/Diets/DietItem'
 import Dashboard from '@/components/pages/Dashboard/Dashboard'
 import NotFound from '@/components/pages/NotFound'
 
 // Global components
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+
+// BE_URL
+export const BACK_END_URL = 'https://smart-food-app.herokuapp.com'
 
 // Dashboard components
 import Fridge from '@/components/pages/Dashboard/Fridge'
@@ -101,6 +106,22 @@ const router = new Router({
       path: '/diets',
       name: 'Diets',
       component: Diets,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/diets/:category',
+      name: 'DietsList',
+      component: DietsList,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/diets/:category/:id',
+      name: 'DietItem',
+      component: DietItem,
       meta: {
         requiresAuth: true
       }

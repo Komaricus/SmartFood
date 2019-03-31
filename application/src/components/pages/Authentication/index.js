@@ -1,7 +1,5 @@
-import Axios from 'axios';
-import router from '@/router';
-
-const SmartFridgeAPI = 'https://smart-food-app.herokuapp.com';
+import Axios from 'axios'
+import router, { BACK_END_URL } from '@/router'
 
 export default {
   user: {
@@ -9,7 +7,7 @@ export default {
   },
 
   authenticate(context, credentials, redirect) {
-    Axios.post(`${SmartFridgeAPI}/api/v1/auth`, credentials)
+    Axios.post(`${BACK_END_URL}/api/v1/auth`, credentials)
       .then(({
         data
       }) => {

@@ -1,12 +1,11 @@
 import Axios from 'axios'
-
-// const SmartFridgeAPI = 'https://smart-food-app.herokuapp.com'
-const SmartFridgeAPI = 'http://localhost:3001'
+import {
+  BACK_END_URL
+} from '@/router'
 
 export default {
-
   postUserProducts(context, user, message) {
-    Axios.post(`${SmartFridgeAPI}/api/v1/update`, user)
+    Axios.post(`${BACK_END_URL}/api/v1/update`, user)
       .then(({
         data
       }) => {
@@ -16,7 +15,7 @@ export default {
   },
 
   getUserProducts(context, user_id) {
-    Axios.get(`${SmartFridgeAPI}/api/v1/get/products/${user_id}`)
+    Axios.get(`${BACK_END_URL}/api/v1/get/products/${user_id}`)
       .then(({
         data
       }) => {
@@ -31,7 +30,7 @@ export default {
   },
 
   postUserDishes(context, user, message) {
-    Axios.post(`${SmartFridgeAPI}/api/v1/update/dishes`, user)
+    Axios.post(`${BACK_END_URL}/api/v1/update/dishes`, user)
       .then(({
         data
       }) => {
@@ -41,7 +40,7 @@ export default {
   },
 
   getUserDishes(context, user_id) {
-    Axios.get(`${SmartFridgeAPI}/api/v1/get/dishes/${user_id}`)
+    Axios.get(`${BACK_END_URL}/api/v1/get/dishes/${user_id}`)
       .then(({
         data
       }) => {
