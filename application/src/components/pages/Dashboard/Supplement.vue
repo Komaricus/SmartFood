@@ -60,20 +60,39 @@
                   flat
                   icon
                   color="green"
-                  @click.stop="dialog = true; type = true; selectedProduct = props.item"
+                  @click.stop="dialog = true; type = true; selectedProduct = props.item; if (selectedProduct.exDate) days = selectedProduct.exDate;"
                 >
                   <v-icon>add</v-icon>
                 </v-btn>
               </td>
               <td class="text-xs-center">
-                <v-btn
-                  flat
-                  icon
-                  color="orange"
-                  @click.stop="selectedProduct = props.item; addToShoppingListButtonClicked()"
+                <v-edit-dialog
+                  :return-value.sync="amount"
+                  large
+                  lazy
+                  @save="addToShoppingListButtonClicked(props.item)"
+                  @cancel="cancel"
+                  @close="close"
                 >
-                  <v-icon>check_circle_outline</v-icon>
-                </v-btn>
+                  <v-btn flat icon>
+                    <v-icon color="orange">check_circle_outline</v-icon>
+                  </v-btn>
+                  <template slot="input">
+                    <div class="mt-3 title">Сколько (в гр)?</div>
+                  </template>
+                  <template slot="input">
+                    <v-text-field
+                      v-model="amount"
+                      label="Количество"
+                      single-line
+                      autofocus
+                      :error-messages="amountErrors"
+                      required
+                      @input="$v.amount.$touch()"
+                      @blur="$v.amount.$touch()"
+                    ></v-text-field>
+                  </template>
+                </v-edit-dialog>
               </td>
             </tr>
           </template>
@@ -320,16 +339,42 @@ export default {
     };
   },
   methods: {
-    addToShoppingListButtonClicked() {
-      var item = {};
-      item._id = this.selectedProduct._id;
-      item.title = this.selectedProduct.title;
-      var type = this.types.indexOf(this.selectedProduct.type);
-      item.amount = 0;
+    close() {
+      this.$v.$reset();
+      this.amount = "";
+    },
+    cancel() {
+      var newMessage = {};
+      newMessage.snackbarColor = "warning";
+      newMessage.message = "Отменено";
+      newMessage.snackbar = true;
 
-      this.$emit("itemAddedToList", item, type);
+      this.$emit("messageChange", newMessage);
+    },
+    addToShoppingListButtonClicked(product) {
+      if (this.amountErrors.length) {
+        var newMessage = {};
+        newMessage.snackbarColor = "red";
+        newMessage.message = "Ошибка в введенных данных";
+        newMessage.snackbar = true;
+
+        this.$emit("messageChange", newMessage);
+        this.$v.$touch();
+      } else {
+        var item = {};
+        item._id = product._id;
+        item.title = product.title;
+        if (product.exDate) {
+          item.exDate = product.exDate;
+        }
+        var type = this.types.indexOf(product.type);
+        item.amount = this.amount;
+
+        this.$emit("itemAddedToList", item, type);
+      }
     },
     async clickProductsMenu(category) {
+      this.productsSearch = "";
       this.loadProducts = true;
       this.productsCategorySelected = true;
       this.titleProducts = ProductsList.getTitle(category);
@@ -379,6 +424,7 @@ export default {
       }
     },
     async clickDishesMenu(category) {
+      this.dishesSearch = "";
       this.loadDishes = true;
       this.dishesCategorySelected = true;
       this.titleDishes = RecipesList.getTitle(category);

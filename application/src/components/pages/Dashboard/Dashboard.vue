@@ -50,7 +50,12 @@
         <v-card flat>
           <!-- Список покупок -->
           <!-- Возможность отследить наличие выбранных продуктов в холодильнике -->
-          <shopping-list :user="userData"></shopping-list>
+          <shopping-list
+            :user="userData"
+            @listChanged="saveList"
+            @productAdded="addProduct"
+            @messageChange="showMessage"
+          ></shopping-list>
         </v-card>
       </v-tab-item>
     </v-tabs>
@@ -135,6 +140,12 @@ export default {
       this.snackbarColor = message.snackbarColor;
       this.message = message.message;
       this.snackbar = message.snackbar;
+    },
+    saveList(list) {
+      this.snackbarColor = "green";
+      this.userData.list = list;
+      localStorage.setItem("list", JSON.stringify(this.userData.list));
+      Dashboard.postUserShoppingList(this, this.userData);
     },
     updateShoppingList(item, type) {
       // Search for existing item in shopping list
