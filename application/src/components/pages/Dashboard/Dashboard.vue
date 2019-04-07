@@ -63,7 +63,9 @@
       <v-tab-item value="creation">
         <v-card flat>
           <!-- Создание продуктов и рецептов -->
-          <creation></creation>
+          <creation
+            @messageChange="showMessage"
+          ></creation>
         </v-card>
       </v-tab-item>
     </v-tabs>
