@@ -15,6 +15,8 @@
 
       <v-tab href="#shopping-list">Список покупок</v-tab>
 
+      <v-tab href="#creation">Создание</v-tab>
+
       <v-tab-item value="fridge">
         <v-card flat>
           <fridge
@@ -56,6 +58,12 @@
             @productAdded="addProduct"
             @messageChange="showMessage"
           ></shopping-list>
+        </v-card>
+      </v-tab-item>
+      <v-tab-item value="creation">
+        <v-card flat>
+          <!-- Создание продуктов и рецептов -->
+          <creation></creation>
         </v-card>
       </v-tab-item>
     </v-tabs>
