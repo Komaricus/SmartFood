@@ -3,20 +3,16 @@ const mongodb = require('mongodb');
 
 const api = {};
 
-// //Add Product
+// Add Product
 api.createProduct = (Product) => (req, res) => {
   if (
-      !req.body.title ||
-      // !req.body.exDate ||
-      !req.body.cals ||
-      !req.body.prots ||
-      !req.body.fats ||
-      !req.body.carbs
-      // ||
-      // !req.body.fibers ||
-      // !req.body.water ||
-      // !req.body.type ||
-      // !req.body.quant
+    !req.body.title ||
+    !req.body.cals ||
+    !req.body.prots ||
+    !req.body.fats ||
+    !req.body.carbs ||
+    !req.body.type ||
+    !req.body.quant
   ) res.json({
     success: false,
     message: 'Заполните обязательные поля'
@@ -24,17 +20,17 @@ api.createProduct = (Product) => (req, res) => {
   else {
     const product = new Product({
       title: req.body.title,
-      exDate: req.body.exDate,
+      exDate: req.body.exDate || "",
       cals: req.body.cals,
       prots: req.body.prots,
       fats: req.body.fats,
       carbs: req.body.carbs,
-      fibers: req.body.fibers,
-      water: req.body.water,
-      img: req.body.img,
-      descr: req.body.descr,
+      fibers: req.body.fibers || "",
+      water: req.body.water || "",
+      img: req.body.img || "",
+      descr: req.body.descr || "",
       type: req.body.type,
-      quant: req.body.quant
+      quant: req.body.quant || ""
     });
 
     product.save(error => {

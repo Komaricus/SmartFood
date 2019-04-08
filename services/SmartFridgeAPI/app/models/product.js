@@ -7,8 +7,7 @@ const Schema = mongoose.Schema({
   },
 
   exDate: {
-    type: Number,
-    required: true
+    type: Number
   },
 
   cals: {
@@ -32,13 +31,11 @@ const Schema = mongoose.Schema({
   },
 
   fibers: {
-    type: Number,
-    required: true
+    type: Number
   },
 
   water: {
-    type: Number,
-    required: true
+    type: Number
   },
 
   img: {
@@ -55,8 +52,7 @@ const Schema = mongoose.Schema({
   },
 
   quant: {
-    type: String,
-    required: true
+    type: String
   }
 });
 
