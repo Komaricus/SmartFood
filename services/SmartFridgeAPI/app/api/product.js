@@ -5,7 +5,19 @@ const api = {};
 
 // //Add Product
 api.createProduct = (Product) => (req, res) => {
-  if (!req.body.title || !req.body.exDate || !req.body.cals || !req.body.prots || !req.body.fats || !req.body.carbs || !req.body.fibers || !req.body.water || !req.body.type || !req.body.quant) res.json({
+  if (
+      !req.body.title ||
+      // !req.body.exDate ||
+      !req.body.cals ||
+      !req.body.prots ||
+      !req.body.fats ||
+      !req.body.carbs
+      // ||
+      // !req.body.fibers ||
+      // !req.body.water ||
+      // !req.body.type ||
+      // !req.body.quant
+  ) res.json({
     success: false,
     message: 'Заполните обязательные поля'
   });

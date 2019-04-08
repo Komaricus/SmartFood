@@ -14,13 +14,18 @@
       </v-tab>
 
       <v-tab-item value="product">
-        <v-card flat>
-          <v-card-title primary-title>
+        <v-card flat class="product-container">
+          <v-card-title class="form-title" primary-title>
             <div>
               <h3 class="headline mb-0">Создать продукт</h3>
               <div>Здесь вы можете добавить свой продукт, которого нет на сайте, заполнив всю необходимую информацию.</div>
             </div>
           </v-card-title>
+          <v-card class="form-card">
+            <product-creation
+              @messageChange="messageChange"
+            ></product-creation>
+          </v-card>
         </v-card>
       </v-tab-item>
 
@@ -38,7 +43,28 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  methods: {
+    messageChange(newMessage) {
+      this.$emit("messageChange", newMessage);
+    }
+  }
+};
 </script>
 <style scoped>
+  .form-card {
+    width: 500px;
+    padding: 15px;
+  }
+
+  .form-title {
+    align-self: flex-start;
+    margin-bottom: 30px;
+  }
+
+  .product-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 </style>
