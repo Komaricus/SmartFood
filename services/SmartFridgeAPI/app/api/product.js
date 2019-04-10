@@ -11,8 +11,7 @@ api.createProduct = (Product) => (req, res) => {
     !req.body.prots ||
     !req.body.fats ||
     !req.body.carbs ||
-    !req.body.type ||
-    !req.body.quant
+    !req.body.type
   ) res.json({
     success: false,
     message: 'Заполните обязательные поля'
@@ -29,7 +28,7 @@ api.createProduct = (Product) => (req, res) => {
       water: req.body.water || "",
       img: req.body.img || "",
       descr: req.body.descr || "",
-      type: req.body.type,
+      type: req.body.type|| "",
       quant: req.body.quant || ""
     });
 
