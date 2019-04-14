@@ -73,8 +73,8 @@
       @blur="$v.image.$touch()"
     ></v-text-field>
 
-    <v-btn @click="submit">submit</v-btn>
-    <v-btn @click="clear">clear</v-btn>
+    <v-btn @click="submit">Добавить</v-btn>
+    <v-btn @click="clear">Очистить</v-btn>
   </form>
 </template>
 

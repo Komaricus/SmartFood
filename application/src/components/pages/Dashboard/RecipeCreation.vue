@@ -22,8 +22,17 @@
     @input="$v.descr.$touch()"
     @blur="$v.descr.$touch()"
   ></v-text-field>
+  <v-text-field
+    v-model="method"
+    :error-messages="methodErrors"
+    label="Способ приготовления"
+    required
+    @input="$v.method.$touch()"
+    @blur="$v.method.$touch()"
+  ></v-text-field>
   <v-select
     v-model="type"
+    :error-messages="typeErrors"
     :items="items"
     item-text="name"
     item-value="id"
@@ -35,9 +44,30 @@
     @change="$v.type.$touch()"
     @blur="$v.type.$touch()"
   ></v-select>
+  <v-select
+    v-model="meal"
+    :error-messages="mealErrors"
+    :items="meals"
+    item-text="name"
+    item-value="id"
+    label="Приемы пищи"
+    multiple
+    chips
+    persistent-hint
+    required
+    @change="$v.meal.$touch()"
+    @blur="$v.meal.$touch()"
+  ></v-select>
+  <v-text-field
+    v-model="portions"
+    :error-messages="portionsErrors"
+    label="Количество порций"
+    @input="$v.portions.$touch()"
+    @blur="$v.portions.$touch()"
+  ></v-text-field>
 
-  <v-btn @click="submit">submit</v-btn>
-  <v-btn @click="clear">clear</v-btn>
+  <v-btn @click="submit">Добавить</v-btn>
+  <v-btn @click="clear">Очистить</v-btn>
 </form>
 </template>
 
@@ -45,7 +75,7 @@
 import Axios from 'axios'
 import { BACK_END_URL } from '@/router'
 import { validationMixin } from 'vuelidate'
-import { required, maxLength, decimal, numeric } from 'vuelidate/lib/validators'
+import { required, maxLength, numeric } from 'vuelidate/lib/validators'
 
 export default {
   mixins: [validationMixin],
@@ -53,7 +83,10 @@ export default {
   validations: {
     title: { required, maxLength: maxLength(20) },
     type: { required },
+    meal: { required },
+    portions: { required, numeric },
     descr: {},
+    method: { required },
     image: {},
   },
   data() {
@@ -62,6 +95,9 @@ export default {
       descr: '',
       image: null,
       type: null,
+      meal: null,
+      portions: '',
+      method: '',
       items: [
         {
           id: 'salads',
@@ -96,6 +132,20 @@ export default {
           name: 'Другие рецепты'
         },
       ],
+      meals: [
+        {
+          id: 'breakfast',
+          name: 'Завтрак'
+        },
+        {
+          id: 'lunch',
+          name: 'Обед'
+        },
+        {
+          id: 'dinner',
+          name: 'Ужин'
+        },
+      ]
     }
   },
   computed: {
@@ -112,19 +162,81 @@ export default {
       !this.$v.type.required && errors.push('Выберите категорию')
       return errors
     },
+    mealErrors() {
+      const errors = []
+      if (!this.$v.meal.$dirty) return errors
+      !this.$v.meal.required && errors.push('Выберите время приема пищи')
+      return errors
+    },
+    methodErrors() {
+      const errors = []
+      if (!this.$v.method.$dirty) return errors
+      !this.$v.method.required && errors.push('Введите способ приготовления')
+      return errors
+    },
+    portionsErrors() {
+      const errors = []
+      if (!this.$v.portions.$dirty) return errors
+      !this.$v.portions.numeric && errors.push('Введите целое число')
+      !this.$v.portions.required && errors.push('Введите количество порций')
+      return errors
+    }
   },
   methods: {
     submit() {
       this.$v.$touch();
-      this.createProduct()
+      this.createRecipe();
     },
     clear() {
       this.$v.$reset();
       this.title = '';
       this.type = null;
+      this.meal = null;
       this.descr = '';
       this.image = null;
+      this.portions = '';
+      this.method = '';
     },
+    async createRecipe() {
+      const {
+        title,
+        type,
+        meal,
+        descr,
+        image,
+        portions,
+        method,
+      } = this.$data
+
+      let res;
+      try {
+        const { data } = await Axios.post(`${BACK_END_URL}/api/v1/recipes`, {
+          title,
+          type,
+          meal,
+          descr,
+          image,
+          portions,
+          method,
+        })
+        res = data
+      } catch (e) {
+        res = {
+          message: 'Ошибка при отправке запроса',
+          snackbarColor: 'red',
+          snackbar: true
+        }
+      }
+
+      this.$emit(
+        "messageChange",
+        {
+          message: res.message,
+          snackbarColor: res.success ? 'green' : 'red',
+          snackbar: true
+        }
+      );
+    }
   }
 }
 </script>
