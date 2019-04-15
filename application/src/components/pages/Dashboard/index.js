@@ -14,6 +14,11 @@ export default {
       })
   },
 
+  async getAllProducts() {
+    const { data } = await Axios.get(`${BACK_END_URL}/products`);
+    return data.map(product => ({ ...product }))
+  },
+
   getUserProducts(context, user_id) {
     Axios.get(`${BACK_END_URL}/api/v1/get/products/${user_id}`)
       .then(({

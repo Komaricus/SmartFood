@@ -30,6 +30,18 @@
     @input="$v.method.$touch()"
     @blur="$v.method.$touch()"
   ></v-text-field>
+  <v-autocomplete
+    v-model="products"
+    :error-messages="productsErrors"
+    :items="productsItems"
+    label="Продукты"
+    multiple
+    chips
+    persistent-hint
+    required
+    @change="$v.products.$touch()"
+    @blur="$v.products.$touch()"
+  ></v-autocomplete>
   <v-select
     v-model="type"
     :error-messages="typeErrors"
@@ -74,6 +86,7 @@
 <script>
 import Axios from 'axios'
 import { BACK_END_URL } from '@/router'
+import Dashboard from "@/components/pages/Dashboard";
 import { validationMixin } from 'vuelidate'
 import { required, maxLength, numeric } from 'vuelidate/lib/validators'
 
@@ -83,6 +96,7 @@ export default {
   validations: {
     title: { required, maxLength: maxLength(20) },
     type: { required },
+    products: { required },
     meal: { required },
     portions: { required, numeric },
     descr: {},
@@ -98,6 +112,12 @@ export default {
       meal: null,
       portions: '',
       method: '',
+      products: null,
+      productsItems: [
+        '111',
+        '222',
+        '333',
+      ],
       items: [
         {
           id: 'salads',
@@ -148,6 +168,28 @@ export default {
       ]
     }
   },
+  async created() {
+    if (!localStorage.getItem('dashboard_products')) {
+      try {
+        this.productsItems = await Dashboard.getAllProducts();
+        const parsed = JSON.stringify(this.productsItems);
+        localStorage.setItem('dashboard_products', parsed);
+      } catch (e) {
+
+      }
+    }
+  },
+  mounted() {
+    if (localStorage.getItem('dashboard_products')) {
+      try {
+        this.productsItems = JSON.parse(
+          localStorage.getItem('dashboard_products')
+        );
+      } catch (e) {
+        localStorage.removeItem('dashboard_products');
+      }
+    }
+  },
   computed: {
     titleErrors() {
       const errors = []
@@ -160,6 +202,12 @@ export default {
       const errors = []
       if (!this.$v.type.$dirty) return errors
       !this.$v.type.required && errors.push('Выберите категорию')
+      return errors
+    },
+    productsErrors() {
+      const errors = []
+      if (!this.$v.products.$dirty) return errors
+      !this.$v.products.required && errors.push('Выберите продукты')
       return errors
     },
     mealErrors() {

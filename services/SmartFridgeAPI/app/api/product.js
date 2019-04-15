@@ -80,13 +80,20 @@ api.findProductByName = (Product) => (req, res) => {
 
 // Load Products
 api.loadProducts = (Product) => (req, res) => {
-
   Product.find({
     type: req.params.category
   }, (error, products) => {
     if (error) throw error;
     res.status(200).json(products);
   });
+}
+
+// Load all products
+api.loadAllProducts = (Product) => (req, res) => {
+  Product.find({}, (err, products) => {
+    if (err) throw err;
+    res.status(200).json(products)
+  })
 }
 
 module.exports = api;
