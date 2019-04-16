@@ -63,9 +63,7 @@
       <v-tab-item value="creation">
         <v-card flat>
           <!-- Создание продуктов и рецептов -->
-          <creation
-            @messageChange="showMessage"
-          ></creation>
+          <creation @messageChange="showMessage"></creation>
         </v-card>
       </v-tab-item>
     </v-tabs>
@@ -153,7 +151,15 @@ export default {
     },
     saveList(list) {
       this.snackbarColor = "green";
-      this.userData.list = list;
+      for (var i = 0; i < list.length; i++) {
+        for (var j = 0; j < this.userData.list.length; j++) {
+          if (list[i].title == this.userData.list[j].title) {
+            this.userData.list[j].items = list[i].items;
+            break;
+          }
+        }
+      }
+
       localStorage.setItem("list", JSON.stringify(this.userData.list));
       Dashboard.postUserShoppingList(this, this.userData);
     },
