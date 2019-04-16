@@ -30,13 +30,18 @@
       </v-tab-item>
 
       <v-tab-item value="recipe">
-        <v-card flat>
-          <v-card-title primary-title>
+        <v-card flat class="product-container">
+          <v-card-title class="form-title" primary-title>
             <div>
               <h3 class="headline mb-0">Создать рецепт</h3>
               <div>Здесь вы можете добавить свой рецепт, которого нет на сайте, заполнив всю необходимую информацию.</div>
             </div>
           </v-card-title>
+          <v-card class="form-card">
+            <recipe-creation
+              @messageChange="messageChange"
+            ></recipe-creation>
+          </v-card>
         </v-card>
       </v-tab-item>
     </v-tabs>

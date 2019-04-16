@@ -36,6 +36,7 @@ import Supplement from '@/components/pages/Dashboard/Supplement'
 import ShoppingList from '@/components/pages/Dashboard/ShoppingList'
 import Creation from '@/components/pages/Dashboard/Creation'
 import ProductCreation from '@/components/pages/Dashboard/ProductCreation'
+import RecipeCreation from '@/components/pages/Dashboard/RecipeCreation'
 
 // Register components
 Vue.component('app-header', Header)
@@ -45,6 +46,7 @@ Vue.component('supplement', Supplement)
 Vue.component('shopping-list', ShoppingList)
 Vue.component('creation', Creation)
 Vue.component('product-creation', ProductCreation)
+Vue.component('recipe-creation', RecipeCreation)
 
 Vue.use(Router)
 

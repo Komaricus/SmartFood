@@ -11,8 +11,7 @@ api.createProduct = (Product) => (req, res) => {
     !req.body.prots ||
     !req.body.fats ||
     !req.body.carbs ||
-    !req.body.type ||
-    !req.body.quant
+    !req.body.type
   ) res.json({
     success: false,
     message: 'Заполните обязательные поля'
@@ -29,7 +28,7 @@ api.createProduct = (Product) => (req, res) => {
       water: req.body.water || "",
       img: req.body.img || "",
       descr: req.body.descr || "",
-      type: req.body.type,
+      type: req.body.type|| "",
       quant: req.body.quant || ""
     });
 
@@ -81,13 +80,20 @@ api.findProductByName = (Product) => (req, res) => {
 
 // Load Products
 api.loadProducts = (Product) => (req, res) => {
-
   Product.find({
     type: req.params.category
   }, (error, products) => {
     if (error) throw error;
     res.status(200).json(products);
   });
+}
+
+// Load all products
+api.loadAllProducts = (Product) => (req, res) => {
+  Product.find({}, (err, products) => {
+    if (err) throw err;
+    res.status(200).json(products)
+  })
 }
 
 module.exports = api;
