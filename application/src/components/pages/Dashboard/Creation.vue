@@ -58,7 +58,7 @@ export default {
 </script>
 <style scoped>
   .form-card {
-    width: 500px;
+    min-width: 50%;
     padding: 15px;
   }
 

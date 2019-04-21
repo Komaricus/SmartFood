@@ -9,13 +9,22 @@
     @input="$v.title.$touch()"
     @blur="$v.title.$touch()"
   ></v-text-field>
-  <v-text-field
-    v-model="image"
-    type="file"
-    label="Изображение"
-    @input="$v.image.$touch()"
-    @blur="$v.image.$touch()"
-  ></v-text-field>
+  <v-flex xs12 class="text-xs-center text-sm-center text-md-center text-lg-center">
+					<img :src="imageUrl" height="150" v-if="imageUrl"/>
+					<v-text-field
+            label="Изображение"
+            @click='pickFile'
+            v-model='imageName'
+            append-icon='attach_file'
+          ></v-text-field>
+					<input
+						type="file"
+						style="display: none"
+						ref="image"
+						accept="image/*"
+						@change="onFilePicked"
+					>
+  </v-flex>
   <v-text-field
     v-model="descr"
     label="Описание"
@@ -34,6 +43,7 @@
     v-model="products"
     :error-messages="productsErrors"
     :items="productsItems"
+    item-text="title"
     label="Продукты"
     multiple
     chips
@@ -101,22 +111,23 @@ export default {
     portions: { required, numeric },
     descr: {},
     method: { required },
-    image: {},
   },
   data() {
     return {
       title: '',
       descr: '',
-      image: null,
+      imageFile: '',
+      imageUrl: '',
+      imageName: '',
       type: null,
       meal: null,
       portions: '',
       method: '',
       products: null,
       productsItems: [
-        '111',
-        '222',
-        '333',
+        {title: '111'},
+        {title: '222'},
+        {title: '333'},
       ],
       items: [
         {
@@ -175,7 +186,7 @@ export default {
         const parsed = JSON.stringify(this.productsItems);
         localStorage.setItem('dashboard_products', parsed);
       } catch (e) {
-
+        
       }
     }
   },
@@ -231,6 +242,28 @@ export default {
     }
   },
   methods: {
+    pickFile () {
+        this.$refs.image.click ()
+    },
+		onFilePicked (e) {
+			const files = e.target.files
+			if(files[0] !== undefined) {
+				this.imageName = files[0].name
+				if(this.imageName.lastIndexOf('.') <= 0) {
+					return
+				}
+				const fr = new FileReader ()
+				fr.readAsDataURL(files[0])
+				fr.addEventListener('load', () => {
+					this.imageUrl = fr.result
+					this.imageFile = files[0]
+				})
+			} else {
+				this.imageName = ''
+				this.imageFile = ''
+				this.imageUrl = ''
+			}
+		},
     submit() {
       this.$v.$touch();
       this.createRecipe();
@@ -251,7 +284,7 @@ export default {
         type,
         meal,
         descr,
-        image,
+        imageFile,
         portions,
         method,
       } = this.$data
@@ -263,7 +296,7 @@ export default {
           type,
           meal,
           descr,
-          image,
+          image: imageFile,
           portions,
           method,
         })
