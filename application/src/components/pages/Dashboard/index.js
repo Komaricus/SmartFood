@@ -15,7 +15,7 @@ export default {
   },
 
   async getAllProducts() {
-    const { data } = await Axios.get(`${BACK_END_URL}/products`);
+    const { data } = await Axios.get(`${BACK_END_URL}/api/v1/products`);
     return data.map(product => ({ ...product }))
   },
 

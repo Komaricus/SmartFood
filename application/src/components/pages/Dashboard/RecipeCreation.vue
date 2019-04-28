@@ -44,9 +44,9 @@
     :error-messages="productsErrors"
     :items="productsItems"
     item-text="title"
+    item-value="_id"
     label="Продукты"
     multiple
-    chips
     persistent-hint
     required
     @change="$v.products.$touch()"
@@ -61,6 +61,7 @@
     label="Категории продуктов"
     multiple
     chips
+    deletable-chips
     persistent-hint
     required
     @change="$v.type.$touch()"
@@ -75,6 +76,7 @@
     label="Приемы пищи"
     multiple
     chips
+    deletable-chips
     persistent-hint
     required
     @change="$v.meal.$touch()"
@@ -287,6 +289,7 @@ export default {
         imageFile,
         portions,
         method,
+        products,
       } = this.$data
 
       let res;
@@ -296,9 +299,10 @@ export default {
           type,
           meal,
           descr,
-          image: imageFile,
+          img: imageFile,
           portions,
           method,
+          ingredients: products.map(pr => ({id: pr})),
         })
         res = data
       } catch (e) {

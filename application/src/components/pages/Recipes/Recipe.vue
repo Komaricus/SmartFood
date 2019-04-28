@@ -40,19 +40,19 @@
             <template slot="items" slot-scope="props">
               <tr @click="redirect(props.item.product.type, props.item.id)">
                 <td>{{ props.item.product.title }}</td>
-                <td class="text-xs-right">{{ props.item.weight }}</td>
+                <td class="text-xs-right">{{ (props.item.weight || 100) }}</td>
                 <td
                   class="text-xs-center"
-                >{{ Math.ceil(props.item.product.cals * props.item.weight / 100 *100)/100}}</td>
+                >{{ Math.ceil(props.item.product.cals * (props.item.weight || 100) / 100 *100)/100}}</td>
                 <td
                   class="text-xs-center"
-                >{{ Math.ceil(props.item.product.prots * props.item.weight / 100 *100)/100}}</td>
+                >{{ Math.ceil(props.item.product.prots * (props.item.weight || 100) / 100 *100)/100}}</td>
                 <td
                   class="text-xs-center"
-                >{{ Math.ceil(props.item.product.fats * props.item.weight / 100 *100)/100}}</td>
+                >{{ Math.ceil(props.item.product.fats * (props.item.weight || 100) / 100 *100)/100}}</td>
                 <td
                   class="text-xs-center"
-                >{{ Math.ceil(props.item.product.carbs * props.item.weight / 100 *100)/100}}</td>
+                >{{ Math.ceil(props.item.product.carbs * (props.item.weight || 100) / 100 *100)/100}}</td>
               </tr>
             </template>
             <template slot="footer">
@@ -165,8 +165,6 @@ import {
   maxValue
 } from "vuelidate/lib/validators";
 
-const SmartFridgeAPI = "https://smart-food-app.herokuapp.com";
-
 export default {
   mixins: [validationMixin],
   validations: {
@@ -271,6 +269,7 @@ export default {
   methods: {
     countTotal(item) {
       let vm = this;
+      if (item.weight === undefined) item.weight = 100;
       vm.total.weight += parseFloat(item.weight);
       vm.total.cals +=
         Math.ceil(((parseFloat(item.product.cals) * item.weight) / 100) * 100) /
