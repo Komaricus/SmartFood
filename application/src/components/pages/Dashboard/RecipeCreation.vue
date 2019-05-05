@@ -49,9 +49,15 @@
     multiple
     persistent-hint
     required
-    @change="$v.products.$touch()"
+    @change="autocompleteChange()"
     @blur="$v.products.$touch()"
   ></v-autocomplete>
+  <v-text-field
+    v-for="product in products"
+    :key="product"
+    v-model="weight[product]"
+    label="Вес продукта"
+  ></v-text-field>
   <v-select
     v-model="type"
     :error-messages="typeErrors"
@@ -100,7 +106,7 @@ import Axios from 'axios'
 import { BACK_END_URL } from '@/router'
 import Dashboard from "@/components/pages/Dashboard";
 import { validationMixin } from 'vuelidate'
-import { required, maxLength, numeric } from 'vuelidate/lib/validators'
+import { required, maxLength, numeric, decimal } from 'vuelidate/lib/validators'
 
 export default {
   mixins: [validationMixin],
@@ -113,6 +119,7 @@ export default {
     portions: { required, numeric },
     descr: {},
     method: { required },
+    weight: { required, decimal }
   },
   data() {
     return {
@@ -126,6 +133,7 @@ export default {
       portions: '',
       method: '',
       products: null,
+      weight: {},
       productsItems: [
         {title: '111'},
         {title: '222'},
@@ -241,9 +249,12 @@ export default {
       !this.$v.portions.numeric && errors.push('Введите целое число')
       !this.$v.portions.required && errors.push('Введите количество порций')
       return errors
-    }
+    },
   },
   methods: {
+    autocompleteChange() {
+      this.$v.products.$touch()
+    },
     pickFile () {
         this.$refs.image.click ()
     },
@@ -290,6 +301,7 @@ export default {
         portions,
         method,
         products,
+        weight,
       } = this.$data
 
       let res;
@@ -302,7 +314,7 @@ export default {
           img: imageFile,
           portions,
           method,
-          ingredients: products.map(pr => ({id: pr})),
+          ingredients: products.map(pr => ({id: pr, weight: weight[pr]})),
         })
         res = data
       } catch (e) {
