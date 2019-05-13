@@ -33,6 +33,10 @@ const Schema = mongoose.Schema({
 
   list: {
     type: Array
+  },
+
+  diet: {
+    type: String
   }
 });
 

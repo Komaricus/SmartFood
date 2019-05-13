@@ -14,4 +14,7 @@ module.exports = (app) => {
 
   app.route('/api/v1/update/shopping-list').post(api.updateShoppingList(models.User));
   app.route('/api/v1/get/shopping-list/:user_id').get(api.getUserShoppingList(models.User));
+
+  app.route('/api/v1/update/diet').post(api.updateDiet(models.User));
+  app.route('/api/v1/get/diet/:user_id').get(api.getUserDiet(models.User));
 }

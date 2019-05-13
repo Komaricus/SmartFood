@@ -9,11 +9,10 @@ module.exports = {
     },
     loadDietById: (Diet) => (req, res) => {
         Diet.find({
-            id: req.params.id,
+            _id: req.params.id,
         }, (err, result) => {
             if (err) throw err;
             res.status(200).json(result);
         })
     }
 };
-

@@ -14,9 +14,23 @@ export default {
       })
   },
 
+  postUserDiet(context, user, message) {
+    Axios.post(`${BACK_END_URL}/api/v1/update/diet`, user)
+      .then(({
+        data
+      }) => {
+        context.snackbar = true;
+        message ? context.message = message : context.message = data.message;
+      })
+  },
+
   async getAllProducts() {
-    const { data } = await Axios.get(`${BACK_END_URL}/api/v1/products`);
-    return data.map(product => ({ ...product }))
+    const {
+      data
+    } = await Axios.get(`${BACK_END_URL}/api/v1/products`);
+    return data.map(product => ({
+      ...product
+    }))
   },
 
   getUserProducts(context, user_id) {
@@ -82,5 +96,18 @@ export default {
 
         localStorage.setItem("list", JSON.stringify(data.user_list));
       })
-  }
+  },
+
+  getUserDiet(context, user_id) {
+    Axios.get(`${BACK_END_URL}/api/v1/get/diet/${user_id}`)
+      .then(({
+        data
+      }) => {
+        context.$set(
+          context.userData,
+          "diet",
+          data.diet
+        );
+      })
+  },
 }

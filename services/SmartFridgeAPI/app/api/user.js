@@ -10,6 +10,7 @@ api.signup = (User) => (req, res) => {
     name: req.body.name,
     products: [],
     dishes: [],
+    diet: "",
     list: [{
         "title": "Фрукты",
         "active": true,
@@ -98,6 +99,22 @@ api.updateDishes = (User) => (req, res) => {
   });
 }
 
+api.updateDiet = (User) => (req, res) => {
+  User.findByIdAndUpdate(req.body.user_id, {
+    $set: {
+      diet: req.body.diet
+    }
+  }, {
+    new: true
+  }, function (err, user) {
+    if (err) return handleError(err);
+    res.status(200).send({
+      success: true,
+      message: 'Диета выбрана'
+    });
+  });
+}
+
 api.updateShoppingList = (User) => (req, res) => {
   User.findByIdAndUpdate(req.body.user_id, {
     $set: {
@@ -146,4 +163,16 @@ api.getUserShoppingList = (User) => (req, res) => {
       });
     });
 }
+
+api.getUserDiet = (User) => (req, res) => {
+  User.findById(
+    req.params.user_id, (err, user) => {
+      if (err) return handleError(err);
+      res.status(200).send({
+        success: true,
+        diet: user.diet
+      });
+    });
+}
+
 module.exports = api;

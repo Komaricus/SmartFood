@@ -22,7 +22,7 @@
         rows-per-page-text="Элементов на странице"
       >
         <template slot="items" slot-scope="props">
-          <tr @click="redirect(props.item.id)">
+          <tr @click="redirect(props.item._id)">
             <td>{{ props.item.name }}</td>
           </tr>
         </template>
@@ -48,54 +48,45 @@
 </template>
 
 <script>
-  import DietsList from "@/components/pages/Diets/DietsList";
-  import router from "@/router";
+import DietsList from "@/components/pages/Diets/DietsList";
+import router from "@/router";
 
-  export default {
-    data() {
-      return {
-        title: "",
-        diets: [{
-          id: 'err',
-          name: 'err'
-        }],
-        snackbar: false,
-        message: "",
-        snackColor: "red lighten-1",
-        search: "",
-        headers: [
-          {
-            text: "Диета",
-            align: "left",
-            value: "title"
-          }
-        ]
-      };
-    },
-    async created() {
-      this.title = DietsList.TITLES[this.$route.params.category] || 'Ошибка';
-      try {
-        if (!localStorage.getItem('diets')) {
-          this.diets = await DietsList.getDiets(this.$route.params.category);
-          localStorage.setItem('diets', this.diets);
-        } else {
-          this.diets = localStorage.getItem('diets');
+export default {
+  data() {
+    return {
+      title: "",
+      diets: [],
+      snackbar: false,
+      message: "",
+      snackColor: "red lighten-1",
+      search: "",
+      headers: [
+        {
+          text: "Диета",
+          align: "left",
+          value: "title"
         }
-      } catch(err) {
-        console.log(err);
-      }
-    },
-    mounted() {
-    },
-    methods: {
-      redirect(route) {
-        router.push(this.$route.params.category + "/" + route);
-      }
+      ]
+    };
+  },
+  async created() {
+    this.title = DietsList.TITLES[this.$route.params.category] || "Ошибка";
+    try {
+      this.diets = await DietsList.getDiets(this.$route.params.category);
+    } catch (err) {
+      console.log(err);
     }
-  };
+  },
+  mounted() {},
+  methods: {
+    redirect(route) {
+      router.push(this.$route.params.category + "/" + route);
+    }
+  }
+};
 </script>
 <style scoped>
-  .page-container {
-    min-height: 90vh;
-  }
+.page-container {
+  min-height: 90vh;
+}
 </style>

@@ -1,5 +1,7 @@
 import Axios from 'axios'
-import router, { BACK_END_URL } from '@/router'
+import router, {
+  BACK_END_URL
+} from '@/router'
 
 export default {
   user: {
@@ -15,6 +17,7 @@ export default {
         context.$cookie.set('user_id', data.user._id, '1D')
         context.$cookie.set('name', data.user.name, '1D')
         context.$cookie.set('username', data.user.username, '1D')
+        context.$cookie.set('diet', data.user.diet, '1D')
         localStorage.setItem('products', JSON.stringify(data.user.products));
         localStorage.setItem('dishes', JSON.stringify(data.user.dishes));
         localStorage.setItem('list', JSON.stringify(data.user.list));

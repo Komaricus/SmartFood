@@ -45,6 +45,7 @@
         <v-card flat>
           <!-- Описание и сведения по выбранной диете -->
           <!-- Если диета не выбрана - ссылка на страницу диет -->
+          <diet></diet>
         </v-card>
       </v-tab-item>
 
@@ -73,6 +74,7 @@
 </template>
 <script>
 import ProductsList from "@/components/pages/Products/ProductsList";
+import DietsList from "@/components/pages/Diets/DietsList";
 import Dashboard from "@/components/pages/Dashboard";
 import { validationMixin } from "vuelidate";
 import {
@@ -109,6 +111,9 @@ export default {
   created() {
     this.userData.user_id = this.$cookie.get("user_id");
     this.userData.name = this.$cookie.get("name");
+
+    // Load user diet
+    Dashboard.getUserDiet(this, this.userData.user_id);
 
     // Load user products
     if (localStorage.getItem("products")) {

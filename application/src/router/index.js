@@ -29,6 +29,7 @@ import Footer from '@/components/Footer'
 
 // BE_URL
 export const BACK_END_URL = 'https://smart-food-app.herokuapp.com'
+// export const BACK_END_URL = 'http://localhost:3001'
 
 // Dashboard components
 import Fridge from '@/components/pages/Dashboard/Fridge'
@@ -47,6 +48,7 @@ Vue.component('shopping-list', ShoppingList)
 Vue.component('creation', Creation)
 Vue.component('product-creation', ProductCreation)
 Vue.component('recipe-creation', RecipeCreation)
+Vue.component('diet', DietItem)
 
 Vue.use(Router)
 
@@ -141,7 +143,8 @@ const router = new Router({
         fridge: Fridge,
         supplement: Supplement,
         "shopping-list": ShoppingList,
-        creation: Creation
+        creation: Creation,
+        diet: DietItem
       },
       meta: {
         requiresAuth: true

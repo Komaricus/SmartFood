@@ -1,126 +1,112 @@
 <template>
   <div>
-    <v-container class="page-container">
-      <app-header />
+    <div
+      v-if="(this.$route.params.id == this.$cookie.get('user_id')) && (this.$cookie.get('diet') == '')"
+    >
+      <v-container>
+        <h3>Диета ещё не выбрана.</h3>
+        <p style="padding-top: 10px;">
+          <router-link to="/diets" style="color: green; ">Перейти к диетам</router-link>
+        </p>
+      </v-container>
+    </div>
+    <v-container
+      v-if="(this.$route.params.id == this.$cookie.get('user_id') && (this.$cookie.get('diet') != '')) || this.$route.params.id != this.$cookie.get('user_id')"
+    >
+      <app-header v-if="this.$route.params.id != this.$cookie.get('user_id')"/>
+      <h1>{{title}}</h1>
+      <v-btn
+        color="success"
+        @click="updateUserDiet"
+        v-if="this.$route.params.id != this.$cookie.get('user_id')"
+      >Выбрать диету</v-btn>
+      <v-btn
+        color="orange"
+        @click="deleteUserDiet"
+        v-if="this.$route.params.id == this.$cookie.get('user_id') && (this.$cookie.get('diet') != '')"
+      >Удалить диету</v-btn>
+
       <v-layout column>
-        <v-tabs fixed-tabs>
-          <v-tab
-            v-for="n in productTypes"
-            :key="n.name"
-          >
-            {{ n.name }}
-          </v-tab>
-          <v-tab-item
-            v-for="n in productTypes"
-            :key="n.name"
-          >
-            <v-card>
-              <v-list v-for="(item, key) in n.value" :key="key">
-                <v-card>
-                  <v-card-text v-if="item.breakfast" align="center">
-                    <ul>
-                      <li>
-                        {{ item.breakfast }}
-                      </li>
-                      <li>
-                        {{ item.lunch }}
-                      </li>
-                      <li>
-                        {{ item.dinner }}
-                      </li>
-                    </ul>
-                  </v-card-text>
-                  <v-card-text v-else align="center">
-                    {{ item }}
-                  </v-card-text>
-                </v-card>
-              </v-list>
+        <v-tabs slider-color="green">
+          <v-tab v-for="n in dietInfo" :key="n.name" v-if=" n.data ">{{ n.name }}</v-tab>
+          <v-tab-item v-for="n in dietInfo" :key="n.name">
+            <v-card v-if=" n.data ">
+              <v-card-title primary-title>
+                <div v-html="n.data" style="text-align: justify;"></div>
+              </v-card-title>
             </v-card>
           </v-tab-item>
         </v-tabs>
       </v-layout>
     </v-container>
-    <app-footer />
+    <v-snackbar bottom="bottom" color="green" v-model="snackbar">{{ message }}</v-snackbar>
   </div>
 </template>
 
 <script>
 import DietsList from "@/components/pages/Diets/DietsList";
+import Dashboard from "@/components/pages/Dashboard";
 
 export default {
-    name: "DietItem",
-    data() {
-      return {
-        productTypes: [
-          {
-            name: 'Рекомендованные',
-            value: ['Rerr1', 'Rerr2', 'Rerr3', 'Rerr4', 'Rerr5'],
-          },
-          {
-            name: 'Запрещенные',
-            value: ['Perr1', 'Perr2', 'Perr3', 'Perr4', 'Perr5'],
-          },
-          {
-            name: 'Меню',
-            value: [
-              {
-                breakfast: 'breakfast1',
-                lunch: 'lunch1',
-                dinner: 'dinner1'
-              },
-              {
-                breakfast: 'breakfast2',
-                lunch: 'lunch2',
-                dinner: 'dinner2'
-              },
-              {
-                breakfast: 'breakfast3',
-                lunch: 'lunch3',
-                dinner: 'dinner3'
-              },
-              {
-                breakfast: 'breakfast4',
-                lunch: 'lunch4',
-                dinner: 'dinner4'
-              },
-              {
-                breakfast: 'breakfast5',
-                lunch: 'lunch5',
-                dinner: 'dinner5'
-              },
-              {
-                breakfast: 'breakfast6',
-                lunch: 'lunch6',
-                dinner: 'dinner6'
-              },
-              {
-                breakfast: 'breakfast7',
-                lunch: 'lunch7',
-                dinner: 'dinner7'
-              },
-            ],
-          }
-        ],
+  name: "DietItem",
+  data() {
+    return {
+      title: "",
+      snackbar: false,
+      message: "",
+      dietInfo: [
+        { name: "Описание", data: "" },
+        { name: "Правила", data: "" },
+        { name: "Рекомендовано", data: "" },
+        { name: "Запрещено", data: "" },
+        { name: "Примерное меню", data: "" }
+      ]
+    };
+  },
+  async created() {
+    try {
+      var id = "";
+      if (this.$route.params.id == this.$cookie.get("user_id")) {
+        id = this.$cookie.get("diet");
+      } else {
+        id = this.$route.params.id;
       }
-    },
-    async created() {
-      try {
-        const { recommended, prohibited, menu } = await DietsList.getDietById(this.$route.params.id);
-        this.productTypes[0].value = recommended;
-        this.productTypes[1].value = prohibited;
-        this.productTypes[2].value = menu;
-      } catch (err) {
-        console.log(err)
-      }
+      const diet = await DietsList.getDietById(id);
+
+      this.title = diet.name;
+      this.dietInfo[0].data = diet.description;
+      this.dietInfo[1].data = diet.rules;
+      this.dietInfo[2].data = diet.recommended;
+      this.dietInfo[3].data = diet.prohibited;
+      this.dietInfo[4].data = diet.menu;
+    } catch (err) {
+      console.log(err);
     }
-}
+  },
+  methods: {
+    updateUserDiet() {
+      var userData = {};
+      userData.user_id = this.$cookie.get("user_id");
+      userData.name = this.$cookie.get("name");
+      userData.diet = this.$route.params.id;
+
+      this.$cookie.set("diet", this.$route.params.id, "1D");
+
+      Dashboard.postUserDiet(this, userData, "Диета выбрана");
+    },
+    deleteUserDiet() {
+      var userData = {};
+      userData.user_id = this.$cookie.get("user_id");
+      userData.name = this.$cookie.get("name");
+      userData.diet = "";
+
+      this.$cookie.set("diet", "", "1D");
+
+      Dashboard.postUserDiet(this, userData, "Диета удалена");
+    }
+  }
+};
 </script>
 
 <style scoped>
-  .page-container {
-    min-height: 90vh;
-  }
-  ul li {
-    list-style: none;
-  }
 </style>
