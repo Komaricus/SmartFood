@@ -269,9 +269,7 @@ export default {
 				fr.readAsDataURL(files[0])
 				fr.addEventListener('load', () => {
           this.imageUrl = fr.result
-          const formData = new FormData();
-          formData.append(this.imageName, files[0])
-          this.imageFile = formData
+          this.imageFile = files[0]
 				})
 			} else {
 				this.imageName = ''
@@ -299,9 +297,7 @@ export default {
         type,
         meal,
         descr,
-        imageFile,
         imageUrl,
-        imageName,
         portions,
         method,
         products,
@@ -315,7 +311,7 @@ export default {
           type,
           meal,
           descr,
-          img: imageFile,
+          img: imageUrl,
           portions,
           method,
           ingredients: products.map(pr => ({id: pr, weight: weight[pr]})),
