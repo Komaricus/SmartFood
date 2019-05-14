@@ -3,7 +3,7 @@
     <v-text-field
       v-model="title"
       :error-messages="titleErrors"
-      :counter="20"
+      :counter="50"
       label="Название"
       required
       @input="$v.title.$touch()"
@@ -59,12 +59,12 @@
       @input="$v.exDate.$touch()"
       @blur="$v.exDate.$touch()"
     ></v-text-field>
-    <v-text-field
+    <v-textarea
       v-model="descr"
       label="Описание"
       @input="$v.descr.$touch()"
       @blur="$v.descr.$touch()"
-    ></v-text-field>
+    ></v-textarea>
     <v-flex xs12 class="text-xs-center text-sm-center text-md-center text-lg-center">
 					<img :src="imageUrl" height="150" v-if="imageUrl"/>
 					<v-text-field
@@ -97,7 +97,7 @@
     mixins: [validationMixin],
 
     validations: {
-      title: { required, maxLength: maxLength(20) },
+      title: { required, maxLength: maxLength(50) },
       type: { required },
       cals: { required, decimal },
       prots: { required, decimal },
@@ -159,7 +159,7 @@
       titleErrors() {
         const errors = []
         if (!this.$v.title.$dirty) return errors
-        !this.$v.title.maxLength && errors.push('Максимальная длина 20 символов')
+        !this.$v.title.maxLength && errors.push('Максимальная длина 50 символов')
         !this.$v.title.required && errors.push('Введите название')
         return errors
       },

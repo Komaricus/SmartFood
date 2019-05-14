@@ -7,7 +7,7 @@ const Schema = mongoose.Schema({
   },
 
   img: {
-    type: String
+    type: Object
   },
 
   descr: {

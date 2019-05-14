@@ -3,7 +3,7 @@
   <v-text-field
     v-model="title"
     :error-messages="titleErrors"
-    :counter="20"
+    :counter="50"
     label="Название"
     required
     @input="$v.title.$touch()"
@@ -25,20 +25,20 @@
 						@change="onFilePicked"
 					>
   </v-flex>
-  <v-text-field
+  <v-textarea
     v-model="descr"
     label="Описание"
     @input="$v.descr.$touch()"
     @blur="$v.descr.$touch()"
-  ></v-text-field>
-  <v-text-field
+  ></v-textarea>
+  <v-textarea
     v-model="method"
     :error-messages="methodErrors"
     label="Способ приготовления"
     required
     @input="$v.method.$touch()"
     @blur="$v.method.$touch()"
-  ></v-text-field>
+  ></v-textarea>
   <v-autocomplete
     v-model="products"
     :error-messages="productsErrors"
@@ -56,7 +56,7 @@
     v-for="product in products"
     :key="product"
     v-model="weight[product]"
-    label="Вес продукта"
+    :label="`${productsItems.find(item => item._id === product).title}(вес)`"
   ></v-text-field>
   <v-select
     v-model="type"
@@ -64,7 +64,7 @@
     :items="items"
     item-text="name"
     item-value="id"
-    label="Категории продуктов"
+    label="Категории рецептов"
     multiple
     chips
     deletable-chips
@@ -112,7 +112,7 @@ export default {
   mixins: [validationMixin],
 
   validations: {
-    title: { required, maxLength: maxLength(20) },
+    title: { required, maxLength: maxLength(50) },
     type: { required },
     products: { required },
     meal: { required },
@@ -215,7 +215,7 @@ export default {
     titleErrors() {
       const errors = []
       if (!this.$v.title.$dirty) return errors
-      !this.$v.title.maxLength && errors.push('Максимальная длина 20 символов')
+      !this.$v.title.maxLength && errors.push('Максимальная длина 50 символов')
       !this.$v.title.required && errors.push('Введите название')
       return errors
     },
@@ -259,7 +259,7 @@ export default {
         this.$refs.image.click ()
     },
 		onFilePicked (e) {
-			const files = e.target.files
+      const files = e.target.files
 			if(files[0] !== undefined) {
 				this.imageName = files[0].name
 				if(this.imageName.lastIndexOf('.') <= 0) {
@@ -268,8 +268,10 @@ export default {
 				const fr = new FileReader ()
 				fr.readAsDataURL(files[0])
 				fr.addEventListener('load', () => {
-					this.imageUrl = fr.result
-					this.imageFile = files[0]
+          this.imageUrl = fr.result
+          const formData = new FormData();
+          formData.append(this.imageName, files[0])
+          this.imageFile = formData
 				})
 			} else {
 				this.imageName = ''
@@ -303,7 +305,7 @@ export default {
         products,
         weight,
       } = this.$data
-
+      
       let res;
       try {
         const { data } = await Axios.post(`${BACK_END_URL}/api/v1/recipes`, {
