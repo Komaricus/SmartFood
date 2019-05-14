@@ -300,6 +300,8 @@ export default {
         meal,
         descr,
         imageFile,
+        imageUrl,
+        imageName,
         portions,
         method,
         products,

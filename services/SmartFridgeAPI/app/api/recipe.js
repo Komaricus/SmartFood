@@ -22,7 +22,7 @@ api.createRecipe = (Recipe) => (req, res) => {
     });
 
     recipe.save(error => {
-      if (error) return res.status(error.code).json({
+      if (error) return res.status(400).json({
         success: false,
         message: 'Произошла ошибка'
       });
