@@ -199,8 +199,8 @@
       },
       exDateDateErrors () {
         const errors = []
-        if (!this.$v.carbs.$dirty) return errors
-        !this.$v.carbs.numeric && errors.push('Должно быть целым числом')
+        if (!this.$v.exDate.$dirty) return errors
+        !this.$v.exDate.numeric && errors.push('Должно быть целым числом')
       },
     },
 
@@ -251,7 +251,7 @@
           prots,
           fats,
           carbs,
-          imageFile,
+          imageUrl,
           descr,
           exDate,
         } = this.$data
@@ -265,7 +265,7 @@
             prots,
             fats,
             carbs,
-            image: imageFile,
+            img: imageUrl,
             descr,
             exDate,
           })

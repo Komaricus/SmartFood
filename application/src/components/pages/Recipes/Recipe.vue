@@ -98,7 +98,7 @@
         </v-card>
       </v-flex>
       <v-flex xs12 sm12 md6 order-md2 order-sm1 order-xs1 v-if="recipe.img">
-        <v-img :src="`/static/img/${$route.params.id}.jpg`" class="recipe-image ma-1 elevation-2"></v-img>
+        <v-img :src="recipe.img" class="recipe-image ma-1 elevation-2"></v-img>
       </v-flex>
       <v-flex xs12 sm6 md12 order-md5 order-sm3 order-xs5 v-if="recipe.descr">
         <v-card tile flat class="ma-1 pa-3 elevation-2">
