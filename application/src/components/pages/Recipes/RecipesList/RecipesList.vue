@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container>
+    <v-container class="page-container">
       <app-header></app-header>
       <h1 class="page-title">{{title}}</h1>
       <v-card-title>
@@ -17,10 +17,12 @@
         :headers="headers"
         :items="recipes"
         :search="search"
+        :loading="loading"
         class="elevation-2"
         :rows-per-page-items="[10,25,{'text':'Все','value':-1}]"
         rows-per-page-text="Элементов на странице"
       >
+        <v-progress-linear slot="progress" color="green" indeterminate></v-progress-linear>
         <template slot="items" slot-scope="props">
           <tr @click="redirect(props.item._id)">
             <td>{{ props.item.title }}</td>
@@ -37,7 +39,7 @@
           slot-scope="props"
         >{{ props.pageStart }} - {{ props.pageStop }} из {{ props.itemsLength }}</template>
         <template slot="no-data">
-          <v-alert :value="true" color="error" icon="warning">Простите, данные не найдены</v-alert>
+          <v-alert :value="!loading" color="error" icon="warning">Простите, данные не найдены</v-alert>
         </template>
       </v-data-table>
       <v-snackbar bottom="bottom" :color="snackColor" v-model="snackbar">{{ message }}</v-snackbar>
@@ -66,34 +68,22 @@ export default {
           align: "left",
           value: "title"
         }
-      ]
+      ],
+      loading: true
     };
   },
   async created() {
     this.title = RecipesList.getTitle(this.$route.params.category);
-    if (!localStorage.getItem(this.$route.params.category)) {
-      try {
-        this.recipes = await RecipesList.getRecipes(
-          this.$route.params.category
-        );
-        const parsed = JSON.stringify(this.recipes);
-        localStorage.setItem(this.$route.params.category, parsed);
-      } catch (err) {
-        this.snackbar = true;
-        this.message = err.message;
-      }
+
+    try {
+      this.recipes = await RecipesList.getRecipes(this.$route.params.category);
+      const parsed = JSON.stringify(this.recipes);
+    } catch (err) {
+      this.snackbar = true;
+      this.message = err.message;
     }
-  },
-  mounted() {
-    if (localStorage.getItem(this.$route.params.category)) {
-      try {
-        this.recipes = JSON.parse(
-          localStorage.getItem(this.$route.params.category)
-        );
-      } catch (e) {
-        localStorage.removeItem(this.$route.params.category);
-      }
-    }
+
+    this.loading = false;
   },
   methods: {
     redirect(route) {
@@ -103,4 +93,7 @@ export default {
 };
 </script>
 <style scoped>
+.page-container {
+  min-height: 90vh;
+}
 </style>

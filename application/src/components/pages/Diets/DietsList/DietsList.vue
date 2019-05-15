@@ -17,10 +17,12 @@
         :headers="headers"
         :items="diets"
         :search="search"
+        :loading="loading"
         class="elevation-2"
         :rows-per-page-items="[10,25,{'text':'Все','value':-1}]"
         rows-per-page-text="Элементов на странице"
       >
+        <v-progress-linear slot="progress" color="green" indeterminate></v-progress-linear>
         <template slot="items" slot-scope="props">
           <tr @click="redirect(props.item._id)">
             <td>{{ props.item.name }}</td>
@@ -37,7 +39,7 @@
           slot-scope="props"
         >{{ props.pageStart }} - {{ props.pageStop }} из {{ props.itemsLength }}</template>
         <template slot="no-data">
-          <v-alert :value="true" color="error" icon="warning">Простите, данные не найдены</v-alert>
+          <v-alert :value="!loading" color="error" icon="warning">Простите, данные не найдены</v-alert>
         </template>
       </v-data-table>
       <v-snackbar bottom="bottom" :color="snackColor" v-model="snackbar">{{ message }}</v-snackbar>
@@ -66,7 +68,8 @@ export default {
           align: "left",
           value: "title"
         }
-      ]
+      ],
+      loading: true
     };
   },
   async created() {
@@ -76,6 +79,7 @@ export default {
     } catch (err) {
       console.log(err);
     }
+    this.loading = false;
   },
   mounted() {},
   methods: {

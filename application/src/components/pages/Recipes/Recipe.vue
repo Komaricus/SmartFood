@@ -61,10 +61,10 @@
                   <strong>Итого</strong>
                 </td>
                 <td class="text-xs-right">{{ total.weight }}</td>
-                <td class="text-xs-center">{{ Math.ceil(total.cals)/100 }}</td>
-                <td class="text-xs-center">{{ Math.ceil(total.prots)/100 }}</td>
-                <td class="text-xs-center">{{ Math.ceil(total.fats)/100 }}</td>
-                <td class="text-xs-center">{{ Math.ceil(total.carbs)/100 }}</td>
+                <td class="text-xs-center">{{ Math.ceil(total.cals * 100)/100 }}</td>
+                <td class="text-xs-center">{{ Math.ceil(total.prots * 100)/100 }}</td>
+                <td class="text-xs-center">{{ Math.ceil(total.fats * 100)/100 }}</td>
+                <td class="text-xs-center">{{ Math.ceil(total.carbs * 100)/100 }}</td>
               </tr>
               <tr>
                 <td>
@@ -92,7 +92,7 @@
               </tr>
             </template>
             <template slot="no-data">
-              <v-alert :value="true" color="error" icon="warning">Простите, данные не найдены</v-alert>
+              <v-alert :value="!loading" color="error" icon="warning">Простите, данные не найдены</v-alert>
             </template>
           </v-data-table>
         </v-card>
@@ -154,7 +154,7 @@
 <script>
 import Axios from "axios";
 import RecipesList from "@/components/pages/Recipes/RecipesList";
-import router, { BACK_END_URL } from '@/router'
+import router, { BACK_END_URL } from "@/router";
 import Authentication from "@/components/pages/Authentication";
 import Dashboard from "@/components/pages/Dashboard";
 import { validationMixin } from "vuelidate";
