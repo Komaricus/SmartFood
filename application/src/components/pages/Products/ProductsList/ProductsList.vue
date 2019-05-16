@@ -17,10 +17,12 @@
         :headers="headers"
         :items="products"
         :search="search"
+        :loading="loading"
         class="elevation-2"
         :rows-per-page-items="[10,25,{'text':'Все','value':-1}]"
         rows-per-page-text="Элементов на странице"
       >
+        <v-progress-linear slot="progress" color="green" indeterminate></v-progress-linear>
         <template slot="items" slot-scope="props">
           <tr @click="redirect(props.item._id)">
             <td>{{ props.item.title }}</td>
@@ -41,13 +43,11 @@
           slot-scope="props"
         >{{ props.pageStart }} - {{ props.pageStop }} из {{ props.itemsLength }}</template>
         <template slot="no-data">
-          <v-alert :value="true" color="error" icon="warning">Простите, данные не найдены</v-alert>
+          <v-alert :value="!loading" color="error" icon="warning">Простите, данные не найдены</v-alert>
         </template>
       </v-data-table>
       <v-snackbar bottom="bottom" :color="snackColor" v-model="snackbar">{{ message }}</v-snackbar>
     </v-container>
-
-    <app-footer></app-footer>
   </div>
 </template>
 
@@ -74,34 +74,24 @@ export default {
         { text: "Жиры (г)", value: "fats" },
         { text: "Белки (г)", value: "prots" },
         { text: "Углеводы (г)", value: "carbs" }
-      ]
+      ],
+      loading: true
     };
   },
   async created() {
     this.title = ProductsList.getTitle(this.$route.params.category);
-    if (!localStorage.getItem(this.$route.params.category)) {
-      try {
-        this.products = await ProductsList.getProducts(
-          this.$route.params.category
-        );
-        const parsed = JSON.stringify(this.products);
-        localStorage.setItem(this.$route.params.category, parsed);
-      } catch (err) {
-        this.snackbar = true;
-        this.message = err.message;
-      }
+
+    try {
+      this.products = await ProductsList.getProducts(
+        this.$route.params.category
+      );
+      const parsed = JSON.stringify(this.products);
+    } catch (err) {
+      this.snackbar = true;
+      this.message = err.message;
     }
-  },
-  mounted() {
-    if (localStorage.getItem(this.$route.params.category)) {
-      try {
-        this.products = JSON.parse(
-          localStorage.getItem(this.$route.params.category)
-        );
-      } catch (e) {
-        localStorage.removeItem(this.$route.params.category);
-      }
-    }
+
+    this.loading = false;
   },
   methods: {
     redirect(route) {

@@ -40,6 +40,7 @@ export default {
     context.$cookie.delete('user_id');
     context.$cookie.delete('name');
     context.$cookie.delete('username');
+    context.$cookie.delete('diet');
 
     localStorage.removeItem('products');
     localStorage.removeItem('dishes');
