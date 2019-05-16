@@ -27,8 +27,8 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
 // BE_URL
-// export const BACK_END_URL = 'https://smart-food-app.herokuapp.com'
-export const BACK_END_URL = 'http://localhost:3001'
+export const BACK_END_URL = 'https://smart-food-app.herokuapp.com'
+// export const BACK_END_URL = 'http://localhost:3001'
 
 // Dashboard components
 import Fridge from '@/components/pages/Dashboard/Fridge'
