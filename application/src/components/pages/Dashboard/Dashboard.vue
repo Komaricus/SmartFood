@@ -6,7 +6,9 @@
 
       <v-spacer></v-spacer>
     </v-toolbar>
-    <v-tabs centered color="cyan" slider-color="yellow" dark fixed-tabs>
+    <v-tabs centered color="cyan" slider-color="yellow" dark fixed-tabs show-arrows>
+      <v-tabs-slider color="yellow"></v-tabs-slider>
+
       <v-tab href="#fridge">Холодильник</v-tab>
 
       <v-tab href="#supplement">Добавление</v-tab>
@@ -16,6 +18,8 @@
       <v-tab href="#shopping-list">Список покупок</v-tab>
 
       <v-tab href="#creation">Создание</v-tab>
+
+      <v-tab href="#menu">Мое меню</v-tab>
 
       <v-tab-item value="fridge">
         <v-card flat>
@@ -67,6 +71,10 @@
           <creation @messageChange="showMessage"></creation>
         </v-card>
       </v-tab-item>
+
+      <v-tab-item value="menu">
+        <day-menu :user="userData" @menuAdded="addMenu" @menuDeleted="deleteMenu"></day-menu>
+      </v-tab-item>
     </v-tabs>
 
     <v-snackbar bottom="bottom" :color="snackbarColor" v-model="snackbar">{{ message }}</v-snackbar>
@@ -115,6 +123,16 @@ export default {
     // Load user diet
     Dashboard.getUserDiet(this, this.userData.user_id);
 
+    // Load user menu
+    if (localStorage.getItem("menu")) {
+      this.$set(
+        this.userData,
+        "menu",
+        JSON.parse(localStorage.getItem("menu"))
+      );
+    } else {
+      Dashboard.getUserMenu(this, this.userData.user_id);
+    }
     // Load user products
     if (localStorage.getItem("products")) {
       this.$set(
@@ -217,6 +235,22 @@ export default {
       this.snackbarColor = "green";
       localStorage.setItem("products", JSON.stringify(this.userData.products));
       Dashboard.postUserProducts(this, this.userData);
+    },
+    addMenu(menu) {
+      this.userData.menu = menu;
+
+      // Update user menu in local storage and DB
+      this.snackbarColor = "green";
+      localStorage.setItem("menu", JSON.stringify(this.userData.menu));
+      Dashboard.postUserMenu(this, this.userData);
+    },
+    deleteMenu(menu) {
+      this.userData.menu = menu;
+
+      // Update user menu in local storage and DB
+      this.snackbarColor = "red";
+      localStorage.setItem("menu", JSON.stringify(this.userData.menu));
+      Dashboard.postUserMenu(this, this.userData, "Меню удалено");
     },
     addDish(dish) {
       // Search for existing dish with same exdate

@@ -56,7 +56,7 @@
               </tr>
             </template>
             <template slot="footer">
-              <tr>
+              <tr v-if="!loading">
                 <td>
                   <strong>Итого</strong>
                 </td>
@@ -66,7 +66,7 @@
                 <td class="text-xs-center">{{ Math.ceil(total.fats * 100)/100 }}</td>
                 <td class="text-xs-center">{{ Math.ceil(total.carbs * 100)/100 }}</td>
               </tr>
-              <tr>
+              <tr v-if="!loading">
                 <td>
                   <strong>На 100 грамм</strong>
                 </td>
@@ -80,7 +80,7 @@
                   class="text-xs-center"
                 >{{ Math.ceil(total.carbs / (total.weight/100) *100)/100 }}</td>
               </tr>
-              <tr>
+              <tr v-if="!loading">
                 <td>
                   <strong>На 1 порцию</strong>
                 </td>
@@ -236,35 +236,29 @@ export default {
     };
   },
   async beforeCreate() {
-    if (!localStorage.getItem(this.$route.params.id)) {
-      let vm = this;
-      await Axios.get(`${BACK_END_URL}/recipe/${vm.$route.params.id}`)
+    let vm = this;
+    await Axios.get(`${BACK_END_URL}/recipe/${vm.$route.params.id}`)
+      .then(function(response) {
+        vm.recipe = response.data[0];
+        vm.getCategories();
+        vm.getMeals();
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+    await vm.recipe.ingredients.forEach((item, index, array) => {
+      Axios.get(`${BACK_END_URL}/product/${item.id}`)
         .then(function(response) {
-          vm.recipe = response.data[0];
-          vm.getCategories();
-          vm.getMeals();
-          const parsed = JSON.stringify(vm.recipe);
-          localStorage.setItem(vm.$route.params.id, parsed);
+          vm.$set(item, "product", response.data[0]);
+          vm.countTotal(item);
         })
         .catch(function(error) {
           console.log(error);
         });
+    });
 
-      await vm.recipe.ingredients.forEach((item, index, array) => {
-        Axios.get(`${BACK_END_URL}/product/${item.id}`)
-          .then(function(response) {
-            vm.$set(item, "product", response.data[0]);
-            const parsed = JSON.stringify(vm.recipe);
-            localStorage.setItem(vm.$route.params.id, parsed);
-            vm.countTotal(item);
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
-      });
-
-      vm.loading = false;
-    }
+    vm.loading = false;
   },
   methods: {
     countTotal(item) {
@@ -364,25 +358,6 @@ export default {
       this.days = "";
       this.dialog = false;
       this.$v.$reset();
-    }
-  },
-  mounted() {
-    if (localStorage.getItem(this.$route.params.id)) {
-      try {
-        this.recipe = JSON.parse(localStorage.getItem(this.$route.params.id));
-        this.getCategories();
-        this.getMeals();
-
-        let vm = this;
-        this.recipe.ingredients.forEach((item, index, array) => {
-          vm.countTotal(item);
-        });
-
-        this.loading = false;
-      } catch (e) {
-        console.log(e);
-        localStorage.removeItem(this.$route.params.id);
-      }
     }
   },
   computed: {

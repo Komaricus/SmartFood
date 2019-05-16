@@ -37,6 +37,10 @@ const Schema = mongoose.Schema({
 
   diet: {
     type: String
+  },
+
+  menu: {
+    type: Array
   }
 });
 

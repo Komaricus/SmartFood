@@ -126,12 +126,6 @@ export default {
       dialog: false,
       nav: [
         {
-          text: "Меню",
-          title: "Меню",
-          active: false,
-          link: "/menu"
-        },
-        {
           text: "Продукты",
           title: "Продукты",
           active: false,

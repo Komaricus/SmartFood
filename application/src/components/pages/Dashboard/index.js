@@ -24,6 +24,16 @@ export default {
       })
   },
 
+  postUserMenu(context, user, message) {
+    Axios.post(`${BACK_END_URL}/api/v1/update/menu`, user)
+      .then(({
+        data
+      }) => {
+        context.snackbar = true;
+        message ? context.message = message : context.message = data.message;
+      })
+  },
+
   async getAllProducts() {
     const {
       data
@@ -109,5 +119,22 @@ export default {
           data.diet
         );
       })
+  },
+
+  getUserMenu(context, user_id) {
+    Axios.get(`${BACK_END_URL}/api/v1/get/menu/${user_id}`)
+      .then(({
+        data
+      }) => {
+        context.$set(
+          context.userData,
+          "menu",
+          data.menu
+        );
+
+        localStorage.setItem("menu", JSON.stringify(data.menu));
+      })
+
+
   },
 }

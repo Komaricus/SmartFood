@@ -67,4 +67,16 @@ api.loadRecipes = (Recipe) => (req, res) => {
   });
 }
 
+api.loadRecipesByMeal = (Recipe) => (req, res) => {
+
+  Recipe.find({
+    meal: {
+      $in: [req.params.meal]
+    }
+  }, (error, recipes) => {
+    if (error) throw error;
+    res.status(200).json(recipes);
+  });
+}
+
 module.exports = api;
