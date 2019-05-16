@@ -240,7 +240,9 @@
         this.carbs = '';
         this.exDate = '';
         this.descr = '';
-        this.image = null;
+        this.imageFile = '';
+        this.imageUrl = '';
+        this.imageName = '';
         this.type = null;
       },
       async createProduct() {

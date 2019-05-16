@@ -287,9 +287,13 @@ export default {
       this.type = null;
       this.meal = null;
       this.descr = '';
-      this.image = null;
       this.portions = '';
       this.method = '';
+      this.imageFile = '';
+      this.imageUrl = '';
+      this.imageName = '';
+      this.products = null;
+      this.weight = {};
     },
     async createRecipe() {
       const {
