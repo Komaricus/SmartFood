@@ -36,7 +36,7 @@ export default {
       })
   },
 
-  signout(context) {
+  signout(context, redirect) {
     context.$cookie.delete('token');
     context.$cookie.delete('user_id');
     context.$cookie.delete('name');
@@ -49,7 +49,7 @@ export default {
     localStorage.removeItem('menu');
     this.user.authenticated = false;
 
-    router.go(0);
+    if (redirect) router.push(redirect)
   },
 
   checkAuthentication() {

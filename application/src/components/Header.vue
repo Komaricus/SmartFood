@@ -148,7 +148,7 @@ export default {
   },
   methods: {
     submitSignout() {
-      Authentication.signout(this);
+      Authentication.signout(this, "/");
     }
   }
 };
