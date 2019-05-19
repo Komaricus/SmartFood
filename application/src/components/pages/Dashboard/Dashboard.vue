@@ -21,6 +21,8 @@
 
       <v-tab href="#menu">Мое меню</v-tab>
 
+      <v-tab href="#scaner">Сканер</v-tab>
+
       <v-tab-item value="fridge">
         <v-card flat>
           <fridge
@@ -74,6 +76,10 @@
 
       <v-tab-item value="menu">
         <day-menu :user="userData" @menuAdded="addMenu" @menuDeleted="deleteMenu"></day-menu>
+      </v-tab-item>
+
+      <v-tab-item value="scaner">
+        <scaner></scaner>
       </v-tab-item>
     </v-tabs>
 

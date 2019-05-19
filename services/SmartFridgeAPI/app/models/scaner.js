@@ -5,9 +5,6 @@ const Schema = mongoose.Schema({
     type: String,
     required: true,
   },
-  user: {
-    type: String
-  },
   barcodes: {
     type: Array
   }

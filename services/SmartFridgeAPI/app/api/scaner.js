@@ -7,7 +7,6 @@ api.createScaner = (Scaner) => (req, res) => {
 
   const scaner = new Scaner({
     name: req.params.name,
-    user: "",
     barcodes: []
   });
 
@@ -25,17 +24,21 @@ api.createScaner = (Scaner) => (req, res) => {
 }
 
 api.updateScaner = (Scaner) => (req, res) => {
-
   Scaner.findOneAndUpdate({
     name: req.params.name
   }, {
     $push: {
-      barcodes: req.body.barcode
+      barcodes: req.body.barcodes
     }
-  }), (error) => {
-    if (error) throw error;
-    res.status(200).send();
-  }
+  }, {
+    new: true
+  }, function (err, scaner) {
+    if (err) return handleError(err);
+    res.status(200).send({
+      success: true,
+      message: 'Список штрихкодов обновлен'
+    });
+  });
 }
 
 api.findScaner = (Scaner) => (req, res) => {
@@ -51,10 +54,14 @@ api.findScaner = (Scaner) => (req, res) => {
 
 api.deleteScaner = (Scaner) => (req, res) => {
 
-  Scaner.findAndDelete({
+  Scaner.findOneAndRemove({
     name: req.params.name
   }, (error) => {
     if (error) throw error;
+    res.json({
+      success: true,
+      message: 'Scaner deleted'
+    });
     res.status(200).send();
   });
 }

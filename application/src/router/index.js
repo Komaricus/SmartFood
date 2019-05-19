@@ -38,6 +38,7 @@ import Creation from '@/components/pages/Dashboard/Creation'
 import ProductCreation from '@/components/pages/Dashboard/ProductCreation'
 import RecipeCreation from '@/components/pages/Dashboard/RecipeCreation'
 import Menu from '@/components/pages/Dashboard/Menu'
+import Scaner from '@/components/pages/Dashboard/Scaner'
 
 // Register components
 Vue.component('app-header', Header)
@@ -50,6 +51,7 @@ Vue.component('product-creation', ProductCreation)
 Vue.component('recipe-creation', RecipeCreation)
 Vue.component('diet', DietItem)
 Vue.component('day-menu', Menu)
+Vue.component('scaner', Scaner)
 
 Vue.use(Router)
 
@@ -138,7 +140,8 @@ const router = new Router({
         "shopping-list": ShoppingList,
         creation: Creation,
         diet: DietItem,
-        menu: Menu
+        menu: Menu,
+        scaner: Scaner
       },
       meta: {
         requiresAuth: true
