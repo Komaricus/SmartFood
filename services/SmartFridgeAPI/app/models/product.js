@@ -53,6 +53,10 @@ const Schema = mongoose.Schema({
 
   quant: {
     type: String
+  },
+
+  sku: {
+    type: Array
   }
 });
 

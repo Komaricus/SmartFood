@@ -28,8 +28,9 @@ api.createProduct = (Product) => (req, res) => {
       water: req.body.water || "",
       img: req.body.img || "",
       descr: req.body.descr || "",
-      type: req.body.type|| "",
-      quant: req.body.quant || ""
+      type: req.body.type || "",
+      quant: req.body.quant || "",
+      sku: req.body.sku || []
     });
 
     product.save(error => {
@@ -67,15 +68,44 @@ api.findProduct = (Product) => (req, res) => {
   });
 
 }
+
 api.findProductByName = (Product) => (req, res) => {
 
   Product.find({
-    title: req.params.title
+    sku: req.params.title
   }, (error, product) => {
     if (error) throw error;
     res.status(200).json(product);
   });
 
+}
+
+// For Scaner
+api.findProductBySKU = (Product) => (req, res) => {
+
+  Product.find({
+    sku: {
+      $in: [req.params.sku]
+    }
+  }, (error, product) => {
+    if (error) throw error;
+    res.status(200).json(product);
+  });
+
+}
+
+api.updateProductSKU = (Product) => (req, res) => {
+
+  Product.findByIdAndUpdate(req.params.id, {
+    $push: {
+      sku: req.body.sku
+    }
+  }, {
+    new: true
+  }, function (err, product) {
+    if (err) return handleError(err);
+    res.status(200).json(product)
+  });
 }
 
 // Load Products

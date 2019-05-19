@@ -10,4 +10,8 @@ module.exports = (app) => {
   app.route('/product/:id').delete(api.deleteProduct(models.Product));
   app.route('/product/:id').get(api.findProduct(models.Product));
   app.route('/product/:name').get(api.findProductByName(models.Product));
+
+  app.route('/product/sku/:sku').get(api.findProductBySKU(models.Product));
+  app.route('/product/sku/:id').post(api.updateProductSKU(models.Product));
+
 }

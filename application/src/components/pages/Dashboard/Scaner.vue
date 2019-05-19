@@ -23,6 +23,8 @@
       color="red"
       @click="disconnectButtonClicked()"
     >Отключить</v-btn>
+
+    <v-btn color="green lighten-2" @click="refreshCodes()">Обновить</v-btn>
   </v-container>
 </template>
 <script>
@@ -65,6 +67,8 @@ export default {
           context.hasScaner = true;
           context.$cookie.set("scaner", name);
         } else {
+          context.hasScaner = false;
+          context.$cookie.delete("scaner");
           context.message = "Сканер не найден";
           context.snackbarColor = "red";
           context.snackbar = true;
@@ -87,6 +91,9 @@ export default {
       this.snackbarColor = "green";
       this.snackbar = true;
       this.hasScaner = false;
+    },
+    refreshCodes() {
+      this.loadScaner(this, this.scanerName);
     }
   },
   computed: {
