@@ -42,6 +42,7 @@ export default {
     context.$cookie.delete('name');
     context.$cookie.delete('username');
     context.$cookie.delete('diet');
+    context.$cookie.delete('scaner');
 
     localStorage.removeItem('products');
     localStorage.removeItem('dishes');

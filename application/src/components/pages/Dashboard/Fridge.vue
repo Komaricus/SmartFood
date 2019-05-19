@@ -220,7 +220,7 @@ export default {
       deleteDialog: false,
       productsHeaders: [
         {
-          text: "Продукт (100г)",
+          text: "Продукт",
           align: "left",
           value: "title"
         },
