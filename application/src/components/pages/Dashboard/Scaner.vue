@@ -27,11 +27,13 @@
     <v-data-table
       :headers="productsHeaders"
       :items="products"
+      :loading="loading"
       class="elevation-2"
       :rows-per-page-items="[10,25,{'text':'Все','value':-1}]"
       rows-per-page-text="Элементов на странице"
     >
-      <template slot="items" slot-scope="props">
+      <v-progress-linear v-slot:progress color="red" indeterminate></v-progress-linear>
+      <template slot="items" slot-scope="props" v-if="!loading">
         <td>
           <v-autocomplete
             v-if="props.item._id < 0"
@@ -60,7 +62,10 @@
             @close="close"
             @open="open(props.item)"
           >
+            <v-icon size="16" class="mr-2">edit</v-icon>
+
             <div>{{ props.item.amount }}</div>
+
             <template slot="input">
               <div class="mt-3 title">Изменить</div>
             </template>
@@ -88,6 +93,7 @@
             @close="close"
             @open="openDays(props.item)"
           >
+            <v-icon size="16" class="mr-2">edit</v-icon>
             <div>{{ props.item.days }}</div>
             <template slot="input">
               <div class="mt-3 title">Изменить</div>
@@ -112,15 +118,16 @@
         slot="pageText"
         slot-scope="props"
       >{{ props.pageStart }} - {{ props.pageStop }} из {{ props.itemsLength }}</template>
-      <template slot="no-data">
+      <template slot="no-data" v-if="!loading">
         <v-alert :value="true" color="error" icon="warning">Продукты не добавлены</v-alert>
       </template>
     </v-data-table>
 
     <div class="text-xs-right my-3">
       <v-btn color="orange lighten-2" @click="refreshCodes()">Обновить</v-btn>
-      <v-btn color="green lighten-2">Добавить всё</v-btn>
+      <v-btn color="green lighten-2" @click="addAllToFridge()">Добавить всё</v-btn>
     </div>
+    <v-snackbar bottom="bottom" :color="snackbarColor" v-model="snackbar">{{ message }}</v-snackbar>
   </v-container>
 </template>
 <script>
@@ -177,7 +184,8 @@ export default {
 
       amount: "1",
       days: "1",
-      productsItems: []
+      productsItems: [],
+      loading: true
     };
   },
   created() {
@@ -187,6 +195,50 @@ export default {
     }
   },
   methods: {
+    addAllToFridge() {
+      var index = -1;
+
+      for (let i = 0; i < this.products.length; i++) {
+        if (this.products[i]._id < 0) {
+          index = i;
+          break;
+        }
+      }
+
+      if (index != -1) {
+        this.snackbarColor = "red";
+        this.snackbar = true;
+        this.message = "Выберите не найденные продукты";
+      } else {
+        for (let i = 0; i < this.products.length; i++) {
+          var newProduct = {};
+          for (var key in this.products[i]) {
+            newProduct[key] = this.products[i][key];
+          }
+          var currentDate = new Date();
+          currentDate.setDate(currentDate.getDate() + +newProduct.days);
+          newProduct.days = `${
+            currentDate.getDate() < 10
+              ? "0" + currentDate.getDate()
+              : currentDate.getDate()
+          }.${
+            currentDate.getMonth() < 10
+              ? "0" + (currentDate.getMonth() + 1)
+              : currentDate.getMonth()
+          }.${currentDate.getFullYear()}`;
+
+          this.$emit("productAdded", newProduct);
+        }
+
+        this.scanerName = "";
+        this.scaner = {};
+        this.products = [];
+        this.productsItems = [];
+        this.hasScaner = false;
+        this.$cookie.delete("scaner");
+        this.$v.$reset();
+      }
+    },
     open(target) {
       this.amount = target.amount;
     },
@@ -205,7 +257,7 @@ export default {
         target.amount = this.amount;
       }
     },
-    productChanged(item, sku) {
+    async productChanged(item, sku) {
       item.title = "";
 
       this.products[
@@ -215,7 +267,15 @@ export default {
         { sku: item.sku, amount: item.amount, days: item.days }
       );
 
+      var context = this;
+
       // Update sku in DB
+      await Axios.post(`${BACK_END_URL}/product/sku/${item._id}`, {
+        sku: item.sku[0]
+      }).then(({ data }) => {
+        context.snackbar = true;
+        context.message = "Штрих-код добавлен продукту";
+      });
 
       this.$v.$reset();
     },
@@ -242,6 +302,8 @@ export default {
       this.days = "1";
     },
     async loadScaner(context, name) {
+      this.loading = true;
+
       await Axios.get(`${BACK_END_URL}/scaner/${name}`).then(({ data }) => {
         if (data.length > 0) {
           context.$set(context, "scaner", data[0]);
@@ -282,6 +344,8 @@ export default {
             console.log(error);
           });
       });
+
+      this.loading = false;
     },
 
     connectButtonClicked() {

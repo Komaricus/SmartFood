@@ -79,7 +79,7 @@
       </v-tab-item>
 
       <v-tab-item value="scaner">
-        <scaner></scaner>
+        <scaner @productAdded="addProduct"></scaner>
       </v-tab-item>
     </v-tabs>
 
