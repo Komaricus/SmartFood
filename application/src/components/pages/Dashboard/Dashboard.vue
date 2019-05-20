@@ -75,7 +75,12 @@
       </v-tab-item>
 
       <v-tab-item value="menu">
-        <day-menu :user="userData" @menuAdded="addMenu" @menuDeleted="deleteMenu"></day-menu>
+        <day-menu
+          :user="userData"
+          @menuAdded="addMenu"
+          @menuDeleted="deleteMenu"
+          @dishAdded="addDish"
+        ></day-menu>
       </v-tab-item>
 
       <v-tab-item value="scaner">

@@ -34,11 +34,12 @@
         <v-stepper-content step="2">
           <h3 class="headline">Выбор блюд</h3>
           <p class="mt-3">Выберите по одному блюду из предложенных на каждый прием пищи.</p>
+          <p>В списке отображаются рецепты, для которых имеются все игредиенты в холодильнике.</p>
 
           <h3 class="mt-3" v-if="breakfast">Завтрак</h3>
           <v-progress-linear v-if="breakfast && breakfastLoading" :indeterminate="true"></v-progress-linear>
           <v-card v-if="breakfast && !breakfastLoading">
-            <v-list two-line>
+            <v-list two-line v-if="breakfastItems.length !=0">
               <template v-for="item in breakfastItems">
                 <v-list-tile :key="item.title" avatar>
                   <v-list-tile-avatar>
@@ -68,12 +69,22 @@
                 </v-list-tile>
               </template>
             </v-list>
+            <v-list v-else>
+              <template>
+                <v-list-tile-content>
+                  <v-list-tile-title
+                    class="mx-4 my-2"
+                    style="font-size: 16px; color: red ;"
+                  >Подходящие блюда для имеющихся продуктов не найдены</v-list-tile-title>
+                </v-list-tile-content>
+              </template>
+            </v-list>
           </v-card>
 
           <h3 class="mt-3" v-if="lunch">Обед</h3>
           <v-progress-linear v-if="lunch && lunchLoading" :indeterminate="true"></v-progress-linear>
           <v-card v-if="lunch && !lunchLoading">
-            <v-list two-line>
+            <v-list two-line v-if="lunchItems.length !=0">
               <template v-for="item in lunchItems">
                 <v-list-tile :key="item.title" avatar>
                   <v-list-tile-avatar>
@@ -101,12 +112,22 @@
                 </v-list-tile>
               </template>
             </v-list>
+            <v-list v-else>
+              <template>
+                <v-list-tile-content>
+                  <v-list-tile-title
+                    class="mx-4 my-2"
+                    style="font-size: 16px; color: red ;"
+                  >Подходящие блюда для имеющихся продуктов не найдены</v-list-tile-title>
+                </v-list-tile-content>
+              </template>
+            </v-list>
           </v-card>
 
           <h3 class="mt-3" v-if="dinner">Ужин</h3>
           <v-progress-linear v-if="dinner && dinnerLoading" :indeterminate="true"></v-progress-linear>
           <v-card v-if="dinner && !dinnerLoading">
-            <v-list two-line>
+            <v-list two-line v-if="dinnerItems.length !=0">
               <template v-for="item in dinnerItems">
                 <v-list-tile :key="item.title" avatar>
                   <v-list-tile-avatar>
@@ -134,6 +155,16 @@
                 </v-list-tile>
               </template>
             </v-list>
+            <v-list v-else>
+              <template>
+                <v-list-tile-content>
+                  <v-list-tile-title
+                    class="mx-4 my-2"
+                    style="font-size: 16px; color: red ;"
+                  >Подходящие блюда для имеющихся продуктов не найдены</v-list-tile-title>
+                </v-list-tile-content>
+              </template>
+            </v-list>
           </v-card>
 
           <div class="text-xs-right">
@@ -146,8 +177,8 @@
           <h3 class="headline">Готово</h3>
           <p class="mt-3">Ваше меню на сегодня создано:</p>
           <v-list two-line>
-            <template v-for="(item, index) in menuItems">
-              <v-subheader :key="item.id">{{meals[index]}}</v-subheader>
+            <template v-for="item in menuItems">
+              <v-subheader :key="item.id">{{item.mealTitle}}</v-subheader>
               <v-list-tile :key="item.title" avatar>
                 <v-list-tile-avatar>
                   <img :src="item.img">
@@ -176,8 +207,8 @@
     <v-card>
       <h3 class="headline pa-3">Меню на сегодня</h3>
       <v-list two-line>
-        <template v-for="(item, index) in menuItems">
-          <v-subheader :key="item.id">{{meals[index]}}</v-subheader>
+        <template v-for="item in menuItems">
+          <v-subheader :key="item.id">{{item.mealTitle}}</v-subheader>
           <v-list-tile :key="item.title" avatar>
             <v-list-tile-avatar>
               <img :src="item.img">
@@ -189,7 +220,7 @@
             </v-list-tile-content>
 
             <v-list-tile-action>
-              <v-btn icon ripple @click="item.checked = true; reloadMenu()" v-if="!item.checked">
+              <v-btn icon ripple @click="selectedDish = item; dialog = true; " v-if="!item.checked">
                 <v-icon color="grey lighten-1">check_box_outline_blank</v-icon>
               </v-btn>
               <v-icon v-if="item.checked" color="green lighten-1">check_box</v-icon>
@@ -201,14 +232,65 @@
         <v-btn flat class="ma-3" color="red" @click="deleteUserMenu()">Удалить</v-btn>
       </div>
     </v-card>
+
+    <v-layout row justify-center>
+      <v-dialog v-model="dialog" persistent max-width="600px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Параметры</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container grid-list-md>
+              <v-layout wrap>
+                <v-flex xs12>
+                  <v-text-field
+                    v-model="days"
+                    label="Срок годности"
+                    hint="Указывается в днях"
+                    :error-messages="daysErrors"
+                    color="green lighten-1"
+                    required
+                    @keyup.enter="addButtonClicked()"
+                    @input="$v.days.$touch()"
+                    @blur="$v.days.$touch()"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn color="blue darken-1" flat @click="addButtonClicked()">Добавить</v-btn>
+            <v-btn color="red darken-1" flat @click="resetDialog()">Закрыть</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-layout>
   </div>
 </template>
 <script>
 import RecipesList from "@/components/pages/Recipes/RecipesList";
 import Dashboard from "@/components/pages/Dashboard";
+import { validationMixin } from "vuelidate";
+import {
+  required,
+  numeric,
+  minValue,
+  maxValue
+} from "vuelidate/lib/validators";
 
 export default {
   props: ["user"],
+  mixins: [validationMixin],
+  validations: {
+    days: {
+      required,
+      numeric,
+      minValue: minValue(1),
+      maxValue: maxValue(2000)
+    }
+  },
   data() {
     return {
       e1: 0,
@@ -234,9 +316,14 @@ export default {
       snackbar: false,
       message: "",
       snackbarColor: "green",
-      meals: ["Завтрак", "Обед", "Ужин"],
       haveMenu: false,
-      menuDate: {}
+      menuDate: {},
+
+      userProducts: [],
+
+      dialog: false,
+      days: "",
+      selectedDish: {}
     };
   },
   created() {
@@ -258,6 +345,47 @@ export default {
     }
   },
   methods: {
+    resetDialog() {
+      this.days = "";
+      this.dialog = false;
+      this.selectedDish = {};
+      this.$v.$reset();
+    },
+    addButtonClicked() {
+      if (this.$v.$invalid) {
+        this.snackbarColor = "red";
+        this.snackbar = true;
+        this.message = "Заполните обязательные поля";
+
+        this.$v.$touch();
+      } else {
+        var newDish = {};
+
+        for (var key in this.selectedDish) {
+          newDish[key] = this.selectedDish[key];
+        }
+        var currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + +this.days);
+        newDish.days = `${
+          currentDate.getDate() < 10
+            ? "0" + currentDate.getDate()
+            : currentDate.getDate()
+        }.${
+          currentDate.getMonth() < 10
+            ? "0" + (currentDate.getMonth() + 1)
+            : currentDate.getMonth()
+        }.${currentDate.getFullYear()}`;
+
+        this.$emit("dishAdded", newDish);
+        this.menuItems.find(
+          item => item.mealTitle == this.selectedDish.mealTitle
+        ).checked = true;
+        this.deleteProductsFromFridge(this.selectedDish);
+
+        this.resetDialog();
+        this.reloadMenu();
+      }
+    },
     toDishChoose() {
       if (
         this.breakfast ||
@@ -282,14 +410,17 @@ export default {
       ) {
         if (this.breakfast) {
           this.$set(this.breakfastSelected, "checked", false);
+          this.$set(this.breakfastSelected, "mealTitle", "Завтрак");
           this.menuItems.push(this.breakfastSelected);
         }
         if (this.lunch) {
           this.$set(this.lunchSelected, "checked", false);
+          this.$set(this.lunchSelected, "mealTitle", "Обед");
           this.menuItems.push(this.lunchSelected);
         }
         if (this.dinner) {
           this.$set(this.dinnerSelected, "checked", false);
+          this.$set(this.dinnerSelected, "mealTitle", "Ужин");
           this.menuItems.push(this.dinnerSelected);
         }
 
@@ -313,10 +444,58 @@ export default {
     reloadMenu() {
       this.$emit("menuAdded", this.menuItems);
     },
+    deleteProductsFromFridge(item) {
+      for (let i = 0; i < item.ingredients.length; i++) {
+        var index = this.$props.user.products.findIndex(
+          product => product._id == item.ingredients[i].id
+        );
+
+        if (index != -1) {
+          this.$props.user.products[index].amount =
+            parseFloat(this.$props.user.products[index].amount) -
+            parseFloat(item.ingredients[i].weight);
+        }
+
+        if (+this.$props.user.products[index].amount <= 0) {
+          this.$props.user.products.splice(index, 1);
+        }
+      }
+
+      localStorage.setItem(
+        "products",
+        JSON.stringify(this.$props.user.products)
+      );
+      Dashboard.postUserProducts(this, this.$props.user, "Продукт удалён");
+    },
+    checkInFridge(data) {
+      var result = [];
+      for (let i = 0; i < data.length; i++) {
+        var haveAll = true;
+        for (let j = 0; j < data[i].ingredients.length; j++) {
+          if (
+            this.$props.user.products.findIndex(
+              product =>
+                product._id == data[i].ingredients[j].id &&
+                +product.amount >= +data[i].ingredients[j].weight
+            ) == -1
+          ) {
+            haveAll = false;
+            break;
+          }
+        }
+
+        if (haveAll) {
+          result.push(data[i]);
+        }
+      }
+
+      return result;
+    },
     async loadRecipes() {
       if (this.breakfast) {
         try {
           this.breakfastItems = await RecipesList.getRecipesByMeal("breakfast");
+          this.breakfastItems = this.checkInFridge(this.breakfastItems);
           this.breakfastLoading = false;
         } catch (err) {
           this.snackbar = true;
@@ -352,6 +531,7 @@ export default {
             }
           }
 
+          this.lunchItems = this.checkInFridge(this.lunchItems);
           this.lunchLoading = false;
         } catch (err) {
           this.snackbar = true;
@@ -362,6 +542,7 @@ export default {
       if (this.dinner) {
         try {
           this.dinnerItems = await RecipesList.getRecipesByMeal("dinner");
+          this.dinnerItems = this.checkInFridge(this.dinnerItems);
           this.dinnerLoading = false;
         } catch (err) {
           this.snackbar = true;
@@ -381,6 +562,7 @@ export default {
       return titlesString;
     },
     refreshMenuCreation() {
+      this.snackbar = false;
       this.e1 = 0;
       this.breakfast = false;
       this.breakfastLoading = true;
@@ -402,6 +584,17 @@ export default {
 
       this.menuItems = [];
       this.haveMenu = false;
+    }
+  },
+  computed: {
+    daysErrors() {
+      const errors = [];
+      if (!this.$v.days.$dirty) return errors;
+      !this.$v.days.required && errors.push("Введите количество дней");
+      !this.$v.days.numeric && errors.push("Должно быть целым числом");
+      !this.$v.days.minValue && errors.push("Минимальное значение: 1");
+      !this.$v.days.maxValue && errors.push("Превышено максимальное значение");
+      return errors;
     }
   }
 };
